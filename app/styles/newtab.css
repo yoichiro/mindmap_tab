@@ -1,0 +1,51 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+textarea#source {
+  width: 100%;
+  height: 100%;
+  resize: none;
+}
+
+div.main {
+  position: absolute;
+  top: 55px;
+  bottom: 5px;
+  width: 100%;
+}
+
+div.main div.row {
+  height: 100%;
+}
+
+div.main div.row>div {
+  height: 100%;
+}
+
+div.canvas-container {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  border: lightgray solid 1px;
+}
+
+canvas {
+  font-size: 14px;
+  font-family: sans-serif;
+  display: block;
+  position: absolute;
+  /*
+  top: 0;
+  bottom: 0;
+  */
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+nav {
+  margin-left: 15px;
+  margin-right: 15px;
+}

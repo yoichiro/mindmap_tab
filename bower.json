@@ -1,0 +1,15 @@
+{
+  "name": "mindmap-tab",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "jcanvas": "^15.12.12",
+    "bootstrap": "^3.3.6",
+    "commonjs": "^0.2.0",
+    "react": "^15.0.1"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "mocha": "~2.4.5"
+  }
+}
