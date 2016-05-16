@@ -84,6 +84,59 @@ class Newtab {
         this.load(work);
       });
     });
+
+    let btnCopyAsPlainText = document.querySelector("#btnCopyAsPlainText");
+    btnCopyAsPlainText.addEventListener("click", () => {
+      this.onBtnCopyAsPlainTextClicked();
+    });
+
+    let btnCopyAsMarkdownText = document.querySelector("#btnCopyAsMarkdownText");
+    btnCopyAsMarkdownText.addEventListener("click", () => {
+      this.onBtnCopyAsMarkdownTextClicked();
+    });
+  }
+
+  onBtnCopyAsPlainTextClicked() {
+    let source = document.querySelector("#source");
+    if (source.value) {
+      this.copyTextToClipboardViaCopyBuffer(source.value);
+    }
+  }
+
+  onBtnCopyAsMarkdownTextClicked() {
+    let source = document.querySelector("#source").value;
+    let root = new Parser().parse(source);
+    if (root) {
+      let text = "";
+      let traverse = (node, currentLevel) => {
+        for (let i = 0; i < currentLevel; i += 1) {
+          text += "  ";
+        }
+        text += "* " + node.text + "\n";
+        if (!node.isLeaf()) {
+          node.children.forEach(child => {
+            traverse(child, currentLevel + 1);
+          });
+        }
+      };
+      traverse(root, 0);
+      this.copyTextToClipboardViaCopyBuffer(text);
+    }
+  }
+
+  copyTextToClipboardViaCopyBuffer(text) {
+    let copyBuffer = document.querySelector("#copyBuffer");
+    copyBuffer.value = text;
+    let range = document.createRange();
+    range.selectNode(copyBuffer);
+    window.getSelection().addRange(range);
+    try {
+      var result = document.execCommand("copy");
+      let msg = result ? "successful" : "unsuccessful";
+      console.log("Copy source text was " + msg);
+    } catch (e) {
+      console.log("Oops, unable to copy");
+    }
   }
 
   drawMindmap(callback) {
