@@ -10,6 +10,7 @@ export default class Node {
     this.children = [];
     this.parent = null;
     this.id = null;
+    this.source = source.trim();
   }
 
   _parseText(source) {

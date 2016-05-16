@@ -112,7 +112,7 @@ class Newtab {
         for (let i = 0; i < currentLevel; i += 1) {
           text += "  ";
         }
-        text += "* " + node.text + "\n";
+        text += "* " + node.source + "\n";
         if (!node.isLeaf()) {
           node.children.forEach(child => {
             traverse(child, currentLevel + 1);
