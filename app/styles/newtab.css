@@ -49,3 +49,13 @@ nav {
   margin-left: 15px;
   margin-right: 15px;
 }
+
+#copyBuffer {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
