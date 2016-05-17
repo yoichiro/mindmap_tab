@@ -6,10 +6,11 @@ export default class Node {
 
   constructor(source) {
     this.tokens = [];
-    this._parseText(source.trim());
     this.children = [];
     this.parent = null;
     this.id = null;
+    this.source = source ? source.trim() : "";
+    this._parseText(this.source);
   }
 
   _parseText(source) {
