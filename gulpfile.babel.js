@@ -120,6 +120,7 @@ gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 gulp.task('watch-prepare', callback => {
   return runSequence(
     'lint', 'babel', 'browserify',
+    ['images', 'extras'],
     callback
   );
 });
@@ -136,6 +137,8 @@ gulp.task('watch', ['watch-prepare'], () => {
   ]).on('change', $.livereload.reload);
 
   gulp.watch('app/scripts.babel/**/*.js', ['watch-prepare']);
+  gulp.watch('app/**/*.html', ['watch-prepare']);
+  gulp.watch('app/**/*.css', ['watch-prepare']);
   gulp.watch('bower.json', ['wiredep']);
 });
 

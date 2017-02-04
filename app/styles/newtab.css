@@ -59,3 +59,11 @@ nav {
   margin: 0;
   padding: 0;
 }
+
+#loginDialog .modal-footer a {
+  margin-right: 10px;
+}
+
+.errorMessage {
+  color: red;
+}
