@@ -3,15 +3,25 @@
 import MindMap from "./mindmap.js";
 import Parser from "./parser.js";
 import Work from "./work.js";
+import LocalWorkStorage from "./local_work_storage.js";
+import FirebaseWorkStorage from "./firebase_work_storage.js";
 
 class Newtab {
 
   constructor() {
-    this.mm = new MindMap("#target");
-    this.currentWork = Work.newInstance();
+    this.useFirebase = false;
 
-    this.assignEventHandlers();
-    this.loadWorkList();
+    this.localWorkStorage = new LocalWorkStorage(this);
+    this.firebaseWorkStorage = new FirebaseWorkStorage(this);
+    this.localWorkStorage.initialize(() => {
+      this.firebaseWorkStorage.initialize((alreadyLoggedIn) => {
+        this.mm = new MindMap("#target");
+        this.currentWork = Work.newInstance();
+        this.changeUseFirebase(alreadyLoggedIn);
+        this.assignEventHandlers();
+        this.loadWorkList();
+      });
+    });
   }
 
   assignEventHandlers() {
@@ -34,7 +44,7 @@ class Newtab {
 
     source.addEventListener("keyup", () => {
       this.drawMindmap(() => {
-        this.currentWork.save(() => {
+        this.getWorkStorage().save(this.currentWork, () => {
           this.loadWorkList();
         });
       });
@@ -42,7 +52,7 @@ class Newtab {
 
     let btnLast = document.querySelector("#btnLast");
     btnLast.addEventListener("click", () => {
-      Work.getLast(work => {
+      this.getWorkStorage().getLast(work => {
         this.load(work);
       });
     });
@@ -60,7 +70,7 @@ class Newtab {
     btnConfirmYes.addEventListener("click", () => {
       $("#confirmDialog").modal("hide");
       if (this.currentWork.content) {
-        Work.remove(this.currentWork, () => {
+        this.getWorkStorage().remove(this.currentWork, () => {
           this.loadWorkList();
           this.load(Work.newInstance());
         });
@@ -94,6 +104,140 @@ class Newtab {
     btnCopyAsMarkdownText.addEventListener("click", () => {
       this.onBtnCopyAsMarkdownTextClicked();
     });
+
+    let btnOnline = document.querySelector("#btnOnline");
+    btnOnline.addEventListener("click", () => {
+      this.onBtnOnlineClicked();
+    });
+
+    $("#loginDialog").on("shown.bs.modal", () => {
+      $("#inputEmail").focus();
+    });
+
+    $("#createUserDialog").on("shown.bs.modal", () => {
+      $("#inputNewEmail").focus();
+    });
+
+    let btnLogin = document.querySelector("#btnLogin");
+    btnLogin.addEventListener("click", () => {
+      this.onBtnLoginClicked();
+    });
+
+    let btnOpenCreateUserDialog = document.querySelector("#btnOpenCreateUserDialog");
+    btnOpenCreateUserDialog.addEventListener("click", () => {
+      this.onBtnOpenCreateUserDialogClicked();
+    });
+
+    let btnCreateUser = document.querySelector("#btnCreateUser");
+    btnCreateUser.addEventListener("click", () => {
+      this.onBtnCreateUserClicked();
+    });
+
+    let btnForgotPassword = document.querySelector("#btnForgotPassword");
+    btnForgotPassword.addEventListener("click", () => {
+      this.onBtnForgotPasswordClicked();
+    });
+  }
+
+  updateLoginErrorMessage(message) {
+    const loginErrorMessage = document.querySelector("#loginErrorMessage");
+    if (message) {
+      loginErrorMessage.innerText = message;
+    } else {
+      loginErrorMessage.innerText = "";
+    }
+  }
+
+  updateCreateUserErrorMessage(message) {
+    const createUserErrorMessage = document.querySelector("#createUserErrorMessage");
+    if (message) {
+      createUserErrorMessage.innerText = message;
+    } else {
+      createUserErrorMessage.innerText = "";
+    }
+  }
+
+  onBtnForgotPasswordClicked() {
+    this.updateLoginErrorMessage("");
+    const email = document.querySelector("#inputEmail").value;
+    this.firebaseWorkStorage.sendPasswordResetEmail(email, () => {
+      this.updateLoginErrorMessage("Sent an email to the address.");
+    }, error => {
+      console.error(error);
+      this.updateLoginErrorMessage(error.message);
+    });
+  }
+
+  onBtnCreateUserClicked() {
+    this.updateCreateUserErrorMessage("");
+    const email = document.querySelector("#inputNewEmail").value;
+    const password1 = document.querySelector("#inputNewPassword1").value;
+    const password2 = document.querySelector("#inputNewPassword2").value;
+    if (password1 && password1 === password2) {
+      this.firebaseWorkStorage.createUser(email, password1, () => {
+        this.changeUseFirebase(true);
+        this.loadWorkList();
+        this.load(Work.newInstance());
+        $("#createUserDialog").modal("hide");
+      }, error => {
+        console.error(error);
+        this.updateCreateUserErrorMessage(error.message);
+      });
+    } else {
+      this.updateCreateUserErrorMessage("Invalid password.");
+    }
+  }
+
+  onBtnOpenCreateUserDialogClicked() {
+    $("#loginDialog").modal("hide");
+    this.updateCreateUserErrorMessage("");
+    document.querySelector("#inputNewEmail").value = document.querySelector("#inputEmail").value;
+    document.querySelector("#inputNewPassword1").value = "";
+    document.querySelector("#inputNewPassword2").value = "";
+    $("#createUserDialog").modal("show");
+  }
+
+  onBtnOnlineClicked() {
+    if (this.useFirebase) {
+      this.getWorkStorage().logout(() => {
+        this.changeUseFirebase(false);
+        this.loadWorkList();
+        this.load(Work.newInstance());
+      });
+    } else {
+      document.querySelector("#inputPassword").value = "";
+      this.updateLoginErrorMessage("");
+      $("#loginDialog").modal("show");
+    }
+  }
+
+  onBtnLoginClicked() {
+    this.updateLoginErrorMessage("");
+    const email = document.querySelector("#inputEmail").value;
+    const passwd = document.querySelector("#inputPassword").value;
+    this.firebaseWorkStorage.login(email, passwd, () => {
+      this.changeUseFirebase(true);
+      this.loadWorkList();
+      this.load(Work.newInstance());
+      $("#loginDialog").modal("hide");
+    }, error => {
+      console.error(error);
+      this.updateLoginErrorMessage(error.message);
+    });
+  }
+
+  changeUseFirebase(alreadyLoggedIn) {
+    this.useFirebase = alreadyLoggedIn;
+    this.updateBtnOnlineText();
+  }
+
+  updateBtnOnlineText() {
+    if (this.useFirebase) {
+      const email = this.firebaseWorkStorage.getCurrentUserEmail();
+      document.querySelector("#lblOnline").innerText = "Logout (" + email + ")";
+    } else {
+      document.querySelector("#lblOnline").innerText = "Login";
+    }
   }
 
   onBtnCopyAsPlainTextClicked() {
@@ -169,7 +313,7 @@ class Newtab {
   }
 
   loadWorkList() {
-    Work.getAll(works => {
+    this.getWorkStorage().getAll(works => {
       let history = document.querySelector("#history");
       history.innerHTML = "";
       works.forEach(work => {
@@ -187,6 +331,35 @@ class Newtab {
         history.appendChild(li);
       });
     });
+  }
+
+  getWorkStorage() {
+    if (this.useFirebase) {
+      return this.firebaseWorkStorage;
+    } else {
+      return this.localWorkStorage;
+    }
+  }
+
+  onWorkAdded() {
+    this.loadWorkList();
+  }
+
+  onWorkChanged(key, changedWork) {
+    this.loadWorkList();
+    if (this.currentWork
+      && this.currentWork.created === changedWork.created
+      && this.currentWork.content !== changedWork.content) {
+      this.load(changedWork);
+    }
+  }
+
+  onWorkRemoved(key, removedWork) {
+    this.loadWorkList();
+    if (this.currentWork
+      && this.currentWork.created === removedWork.created) {
+      this.load(Work.newInstance());
+    }
   }
 
 }
