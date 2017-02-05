@@ -93,7 +93,7 @@ export default class FirebaseWorkStorage {
   }
 
   save(work, callback) {
-    if (work.isSave && work.content.trim().length > 0) {
+    if (work.isSave && work.hasContent()) {
       const myRootRef = this._getMyRootRef();
       myRootRef.once("value").then(snapshot => {
         let contentMap = snapshot.val() || {};

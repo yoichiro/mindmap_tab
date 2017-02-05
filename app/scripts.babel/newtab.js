@@ -24,90 +24,26 @@ class Newtab {
     });
   }
 
+  // Event Handlers
+
   assignEventHandlers() {
     let source = document.querySelector("#source");
     source.addEventListener("keydown", e => {
-      var elem, end, start, value;
-      if (e.keyCode === 9) {
-        if (e.preventDefault) {
-          e.preventDefault();
-        }
-        elem = e.target;
-        start = elem.selectionStart;
-        end = elem.selectionEnd;
-        value = elem.value;
-        elem.value = "" + value.substring(0, start) + "\t" + value.substring(end);
-        elem.selectionStart = elem.selectionEnd = start + 1;
-        return false;
-      }
+      return this.onSourceKeydowned(e);
     });
 
     source.addEventListener("keyup", () => {
-      this.drawMindmap(() => {
-        this.getWorkStorage().save(this.currentWork, () => {
-          this.loadWorkList();
-        });
+      this.onSourceKeyuped();
+    });
+
+    ["btnLast", "btnDelete", "btnNew", "btnTopSites", "btnConfirmYes",
+      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
+      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
+      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg"].forEach(name => {
+      let element = document.querySelector("#" + name);
+      element.addEventListener("click", () => {
+        this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
       });
-    });
-
-    let btnLast = document.querySelector("#btnLast");
-    btnLast.addEventListener("click", () => {
-      this.getWorkStorage().getLast(work => {
-        this.load(work);
-      });
-    });
-
-    let btnDelete = document.querySelector("#btnDelete");
-    btnDelete.addEventListener("click", () => {
-      if (this.currentWork.content) {
-        let confirmMessage = document.querySelector("#confirmMessage");
-        confirmMessage.innerText = "Do you really want to delete `" + this.currentWork.firstLine + "`?";
-        $("#confirmDialog").modal("show");
-      }
-    });
-
-    let btnConfirmYes = document.querySelector("#btnConfirmYes");
-    btnConfirmYes.addEventListener("click", () => {
-      $("#confirmDialog").modal("hide");
-      if (this.currentWork.content) {
-        this.getWorkStorage().remove(this.currentWork, () => {
-          this.loadWorkList();
-          this.load(Work.newInstance());
-        });
-      }
-    });
-
-    let btnNew = document.querySelector("#btnNew");
-    btnNew.addEventListener("click", () => {
-      this.load(Work.newInstance());
-    });
-
-    let btnTopSites = document.querySelector("#btnTopSites");
-    btnTopSites.addEventListener("click", () => {
-      let text = "Top Sites\n";
-      chrome.topSites.get(sites => {
-        sites.forEach(site => {
-          text = text + "\t[" + site.title + "](" + site.url + ")\n";
-        });
-        let work = new Work(Date.now(), text, Date.now());
-        work.isSave = false;
-        this.load(work);
-      });
-    });
-
-    let btnCopyAsPlainText = document.querySelector("#btnCopyAsPlainText");
-    btnCopyAsPlainText.addEventListener("click", () => {
-      this.onBtnCopyAsPlainTextClicked();
-    });
-
-    let btnCopyAsMarkdownText = document.querySelector("#btnCopyAsMarkdownText");
-    btnCopyAsMarkdownText.addEventListener("click", () => {
-      this.onBtnCopyAsMarkdownTextClicked();
-    });
-
-    let btnOnline = document.querySelector("#btnOnline");
-    btnOnline.addEventListener("click", () => {
-      this.onBtnOnlineClicked();
     });
 
     $("#loginDialog").on("shown.bs.modal", () => {
@@ -117,43 +53,81 @@ class Newtab {
     $("#createUserDialog").on("shown.bs.modal", () => {
       $("#inputNewEmail").focus();
     });
-
-    let btnLogin = document.querySelector("#btnLogin");
-    btnLogin.addEventListener("click", () => {
-      this.onBtnLoginClicked();
-    });
-
-    let btnOpenCreateUserDialog = document.querySelector("#btnOpenCreateUserDialog");
-    btnOpenCreateUserDialog.addEventListener("click", () => {
-      this.onBtnOpenCreateUserDialogClicked();
-    });
-
-    let btnCreateUser = document.querySelector("#btnCreateUser");
-    btnCreateUser.addEventListener("click", () => {
-      this.onBtnCreateUserClicked();
-    });
-
-    let btnForgotPassword = document.querySelector("#btnForgotPassword");
-    btnForgotPassword.addEventListener("click", () => {
-      this.onBtnForgotPasswordClicked();
-    });
   }
 
-  updateLoginErrorMessage(message) {
-    const loginErrorMessage = document.querySelector("#loginErrorMessage");
-    if (message) {
-      loginErrorMessage.innerText = message;
-    } else {
-      loginErrorMessage.innerText = "";
+  onSourceKeydowned(e) {
+    var elem, end, start, value;
+    if (e.keyCode === 9) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      elem = e.target;
+      start = elem.selectionStart;
+      end = elem.selectionEnd;
+      value = elem.value;
+      elem.value = "" + value.substring(0, start) + "\t" + value.substring(end);
+      elem.selectionStart = elem.selectionEnd = start + 1;
+      return false;
     }
   }
 
-  updateCreateUserErrorMessage(message) {
-    const createUserErrorMessage = document.querySelector("#createUserErrorMessage");
-    if (message) {
-      createUserErrorMessage.innerText = message;
-    } else {
-      createUserErrorMessage.innerText = "";
+  onSourceKeyuped() {
+    this.drawMindmap(() => {
+      this.getWorkStorage().save(this.currentWork, () => {
+        this.loadWorkList();
+      });
+    });
+  }
+
+  onBtnLastClicked() {
+    this.getWorkStorage().getLast(work => {
+      this.load(work);
+    });
+  }
+
+  onBtnDeleteClicked() {
+    if (this.currentWork.content) {
+      let confirmMessage = document.querySelector("#confirmMessage");
+      confirmMessage.innerText = "Do you really want to delete `" + this.currentWork.firstLine + "`?";
+      $("#confirmDialog").modal("show");
+    }
+  }
+
+  onBtnConfirmYesClicked() {
+    $("#confirmDialog").modal("hide");
+    if (this.currentWork.content) {
+      this.getWorkStorage().remove(this.currentWork, () => {
+        this.loadWorkList();
+        this.load(Work.newInstance());
+      });
+    }
+  }
+
+  onBtnNewClicked() {
+    this.load(Work.newInstance());
+  }
+
+  onBtnTopSitesClicked() {
+    let text = "Top Sites\n";
+    chrome.topSites.get(sites => {
+      sites.forEach(site => {
+        text = text + "\t[" + site.title + "](" + site.url + ")\n";
+      });
+      let work = new Work(Date.now(), text, Date.now());
+      work.isSave = false;
+      this.load(work);
+    });
+  }
+
+  onBtnExportAsPngClicked() {
+    if (this.currentWork.hasContent()) {
+      this.mm.saveAsImage(this.currentWork.firstLine, "png");
+    }
+  }
+
+  onBtnExportAsJpegClicked() {
+    if (this.currentWork.hasContent()) {
+      this.mm.saveAsImage(this.currentWork.firstLine, "jpeg");
     }
   }
 
@@ -226,20 +200,6 @@ class Newtab {
     });
   }
 
-  changeUseFirebase(alreadyLoggedIn) {
-    this.useFirebase = alreadyLoggedIn;
-    this.updateBtnOnlineText();
-  }
-
-  updateBtnOnlineText() {
-    if (this.useFirebase) {
-      const email = this.firebaseWorkStorage.getCurrentUserEmail();
-      document.querySelector("#lblOnline").innerText = "Logout (" + email + ")";
-    } else {
-      document.querySelector("#lblOnline").innerText = "Login";
-    }
-  }
-
   onBtnCopyAsPlainTextClicked() {
     let source = document.querySelector("#source");
     if (source.value) {
@@ -268,69 +228,31 @@ class Newtab {
     }
   }
 
-  copyTextToClipboardViaCopyBuffer(text) {
-    let copyBuffer = document.querySelector("#copyBuffer");
-    copyBuffer.value = text;
-    let range = document.createRange();
-    range.selectNode(copyBuffer);
-    window.getSelection().addRange(range);
-    try {
-      var result = document.execCommand("copy");
-      let msg = result ? "successful" : "unsuccessful";
-      console.log("Copy source text was " + msg);
-    } catch (e) {
-      console.log("Oops, unable to copy");
-    }
-  }
+  // Update messages
 
-  drawMindmap(callback) {
-    let source = document.querySelector("#source").value;
-    let root = new Parser().parse(source);
-    if (root) {
-      this.currentWork.content = source;
-      this.mm.draw(root);
+  updateLoginErrorMessage(message) {
+    const loginErrorMessage = document.querySelector("#loginErrorMessage");
+    if (message) {
+      loginErrorMessage.innerText = message;
     } else {
-      this.mm.clear();
-    }
-    if (callback) {
-      callback();
+      loginErrorMessage.innerText = "";
     }
   }
 
-  load(work) {
-    this.currentWork = work;
-    let source = document.querySelector("#source");
-    source.value = this.currentWork.content;
-    this.drawMindmap();
+  updateCreateUserErrorMessage(message) {
+    const createUserErrorMessage = document.querySelector("#createUserErrorMessage");
+    if (message) {
+      createUserErrorMessage.innerText = message;
+    } else {
+      createUserErrorMessage.innerText = "";
+    }
   }
 
-  toLocaleString(date) {
-    return [
-      date.getFullYear(),
-      date.getMonth() + 1,
-      date.getDate()
-    ].join("/") + " " + date.toLocaleTimeString();
-  }
+  // For Firebase
 
-  loadWorkList() {
-    this.getWorkStorage().getAll(works => {
-      let history = document.querySelector("#history");
-      history.innerHTML = "";
-      works.forEach(work => {
-        let li = document.createElement("li");
-        let link = document.createElement("a");
-        link.href = "#";
-        let label = work.firstLine + " (" + this.toLocaleString(new Date(work.created)) + ")";
-        link.appendChild(document.createTextNode(label));
-        link.addEventListener("click", ((x) => {
-          return () => {
-            this.load(x);
-          };
-        })(work));
-        li.appendChild(link);
-        history.appendChild(li);
-      });
-    });
+  changeUseFirebase(alreadyLoggedIn) {
+    this.useFirebase = alreadyLoggedIn;
+    this.updateBtnOnlineText();
   }
 
   getWorkStorage() {
@@ -360,6 +282,86 @@ class Newtab {
       && this.currentWork.created === removedWork.created) {
       this.load(Work.newInstance());
     }
+  }
+
+  updateBtnOnlineText() {
+    if (this.useFirebase) {
+      const email = this.firebaseWorkStorage.getCurrentUserEmail();
+      document.querySelector("#lblOnline").innerText = "Logout (" + email + ")";
+    } else {
+      document.querySelector("#lblOnline").innerText = "Login";
+    }
+  }
+
+  // For Clipboard
+
+  copyTextToClipboardViaCopyBuffer(text) {
+    let copyBuffer = document.querySelector("#copyBuffer");
+    copyBuffer.value = text;
+    let range = document.createRange();
+    range.selectNode(copyBuffer);
+    window.getSelection().addRange(range);
+    try {
+      var result = document.execCommand("copy");
+      let msg = result ? "successful" : "unsuccessful";
+      console.log("Copy source text was " + msg);
+    } catch (e) {
+      console.log("Oops, unable to copy");
+    }
+  }
+
+  // Draw MindMap
+
+  drawMindmap(callback) {
+    let source = document.querySelector("#source").value;
+    let root = new Parser().parse(source);
+    if (root) {
+      this.currentWork.content = source;
+      this.mm.draw(root);
+    } else {
+      this.mm.clear();
+    }
+    if (callback) {
+      callback();
+    }
+  }
+
+  loadWorkList() {
+    this.getWorkStorage().getAll(works => {
+      let history = document.querySelector("#history");
+      history.innerHTML = "";
+      works.forEach(work => {
+        let li = document.createElement("li");
+        let link = document.createElement("a");
+        link.href = "#";
+        let label = work.firstLine + " (" + this.toLocaleString(new Date(work.created)) + ")";
+        link.appendChild(document.createTextNode(label));
+        link.addEventListener("click", ((x) => {
+          return () => {
+            this.load(x);
+          };
+        })(work));
+        li.appendChild(link);
+        history.appendChild(li);
+      });
+    });
+  }
+
+  load(work) {
+    this.currentWork = work;
+    let source = document.querySelector("#source");
+    source.value = this.currentWork.content;
+    this.drawMindmap();
+  }
+
+  // Utilities
+
+  toLocaleString(date) {
+    return [
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate()
+    ].join("/") + " " + date.toLocaleTimeString();
   }
 
 }

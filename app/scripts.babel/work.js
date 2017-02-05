@@ -23,4 +23,8 @@ export default class Work {
     }
   }
 
+  hasContent() {
+    return this.content && this.content.trim().length > 0;
+  }
+
 }
