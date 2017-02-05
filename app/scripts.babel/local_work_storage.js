@@ -23,7 +23,7 @@ export default class LocalWorkStorage {
   }
 
   save(work, callback) {
-    if (work.isSave && work.content.trim().length > 0) {
+    if (work.isSave && work.hasContent()) {
       this._getAll(contentMap => {
         // TODO: Should check exists and updated
         work.updated = Date.now();

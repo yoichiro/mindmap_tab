@@ -40,6 +40,7 @@ export default class MindMap {
     let rightLeafCount = this._getAllLeafCount(rightChildren);
 
     let canvasSize = this._getCanvasSize(root, leftLeafCount, rightLeafCount, leftMaxTextLengthNodes, rightMaxTextLengthNodes);
+    this._drawBackgroundColor(canvasSize);
 
     let centerNodeBounds = this._drawCenterNode(
       canvasSize.leftNodesWidth,
@@ -57,6 +58,18 @@ export default class MindMap {
     // this.canvas_.clearCanvas();
     this.canvas_.removeLayers();
     this.canvas_.drawLayers();
+  }
+
+  saveAsImage(title, format) {
+    this.canvasDom_.toBlob(blob => {
+      let anchor = document.createElement("a");
+      let url = window.URL.createObjectURL(blob);
+      anchor.href = url;
+      anchor.target = "_blank";
+      anchor.download = title + "." + format;
+      anchor.click();
+      window.URL.revokeObjectURL(url);
+    }, "image/" + format);
   }
 
   // Private functions
@@ -384,6 +397,16 @@ export default class MindMap {
       this._connectNodeToCenterNode(nodeBounds, centerNodeBounds, node.id);
       this._drawRightNodeChildrenFromNode(node.children, nodeBounds, currentHeight);
       currentHeight += allNodesHeight;
+    });
+  }
+
+  _drawBackgroundColor(canvasSize) {
+    this.canvas_.drawRect({
+      fillStyle: "white",
+      x: 0,
+      y: 0,
+      width: canvasSize.width,
+      height: canvasSize.height
     });
   }
 

@@ -137,6 +137,28 @@ class Newtab {
     btnForgotPassword.addEventListener("click", () => {
       this.onBtnForgotPasswordClicked();
     });
+
+    let btnExportAsPng = document.querySelector("#btnExportAsPng");
+    btnExportAsPng.addEventListener("click", () => {
+      this.onBtnExportAsPngClicked();
+    });
+
+    let btnExportAsJpeg = document.querySelector("#btnExportAsJpeg");
+    btnExportAsJpeg.addEventListener("click", () => {
+      this.onBtnExportAsJpegClicked();
+    });
+  }
+
+  onBtnExportAsPngClicked() {
+    if (this.currentWork.hasContent()) {
+      this.mm.saveAsImage(this.currentWork.firstLine, "png");
+    }
+  }
+
+  onBtnExportAsJpegClicked() {
+    if (this.currentWork.hasContent()) {
+      this.mm.saveAsImage(this.currentWork.firstLine, "jpeg");
+    }
   }
 
   updateLoginErrorMessage(message) {
