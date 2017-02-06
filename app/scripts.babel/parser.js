@@ -7,10 +7,11 @@ export default class Parser {
   // Public functions
 
   parse(source) {
-    let lines = source.split(/\r\n|\r|\n/);
+    let lines = source.split(/\n/);
     let root = null;
     let prevNode = null;
     let prevLevel = -1;
+    let position = 0;
     for (let i = 0; i < lines.length; i += 1) {
       if (lines[i].trim()) {
         let level = this._getIndentLevel(lines[i]);
@@ -28,7 +29,7 @@ export default class Parser {
             let parentNode = prevNode.parent;
             if (parentNode) {
               let node = null;
-              parentNode.add(lines[i], x => {
+              parentNode.add(lines[i], position + level, x => {
                 node = x;
               });
               prevLevel = level;
@@ -44,7 +45,7 @@ export default class Parser {
             }
             if (parentNode) {
               let node = null;
-              parentNode.add(lines[i], x => {
+              parentNode.add(lines[i], position + level, x => {
                 node = x;
               });
               prevLevel = level;
@@ -55,7 +56,7 @@ export default class Parser {
             }
           } else if (prevLevel === level - 1) {
             let node = null;
-            prevNode.add(lines[i], x => {
+            prevNode.add(lines[i], position + level, x => {
               node = x;
             });
             prevLevel = level;
@@ -66,6 +67,7 @@ export default class Parser {
           }
         }
       }
+      position += lines[i].length + 1;
     }
     return root;
   }
