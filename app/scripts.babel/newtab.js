@@ -15,7 +15,7 @@ class Newtab {
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
     this.localWorkStorage.initialize(() => {
       this.firebaseWorkStorage.initialize((alreadyLoggedIn) => {
-        this.mm = new MindMap("#target");
+        this.mm = new MindMap(this, "#target");
         this.currentWork = Work.newInstance();
         this.changeUseFirebase(alreadyLoggedIn);
         this.assignEventHandlers();
@@ -352,6 +352,14 @@ class Newtab {
     let source = document.querySelector("#source");
     source.value = this.currentWork.content;
     this.drawMindmap();
+  }
+
+  jumpCaretTo(position) {
+    let source = document.querySelector("#source");
+    source.focus();
+    source.selectionStart = position;
+    source.selectionEnd = position;
+    source.scrollTop = position;
   }
 
   // Utilities

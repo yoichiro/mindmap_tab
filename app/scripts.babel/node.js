@@ -4,13 +4,14 @@ import Token from "./token.js";
 
 export default class Node {
 
-  constructor(source) {
+  constructor(source, position) {
     this.tokens = [];
     this.children = [];
     this.parent = null;
     this.id = null;
     this.source = source ? source.trim() : "";
     this._parseText(this.source);
+    this.position = position;
   }
 
   _parseText(source) {
@@ -37,11 +38,11 @@ export default class Node {
   }
 
   static root(text) {
-    return new Node(text);
+    return new Node(text, 0);
   }
 
-  add(text, callback) {
-    let child = new Node(text);
+  add(text, position, callback) {
+    let child = new Node(text, position);
     child.setParent(this);
     this.children.push(child);
     if (callback) {

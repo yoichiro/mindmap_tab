@@ -15,7 +15,8 @@ const NODE_HEIGHT_WITH_MARGIN = NODE_HEIGHT + NODE_MARGIN_HEIGHT;
 
 export default class MindMap {
 
-  constructor(targetElementId) {
+  constructor(newtab, targetElementId) {
+    this.newtab = newtab;
     $.jCanvas.defaults.fromCenter = false;
     $.jCanvas.defaults.layer = true;
     this.canvasDom_ = document.querySelector(targetElementId);
@@ -46,7 +47,8 @@ export default class MindMap {
       canvasSize.leftNodesWidth,
       Math.max(canvasSize.height / 2 - TEXT_FONT_SIZE - CENTER_NODE_MARGIN, 0),
       root.id,
-      root.text);
+      root.text,
+      root.position);
 
     this._drawLeftNodeChildrenFromCenterNode(leftChildren, centerNodeBounds);
     this._drawRightNodeChildrenFromCenterNode(rightChildren, centerNodeBounds);
@@ -102,18 +104,23 @@ export default class MindMap {
     return this.canvasDom_.getContext("2d").measureText(text).width;
   }
 
-  _drawText(x, y, name, text) {
+  _drawText(x, y, name, text, position) {
     this.canvas_.drawText({
-                            fillStyle: "black",
-                            // strokeStyle: "black",
-                            strokeWidth: "0",
-                            x: x,
-                            y: y,
-                            fontSize: TEXT_FONT_SIZE,
-                            fontFamily: TEXT_FONT_FAMILY,
-                            text: text,
-                            name: name + "-text"
-                          });
+      fillStyle: "black",
+      // strokeStyle: "black",
+      strokeWidth: "0",
+      x: x,
+      y: y,
+      fontSize: TEXT_FONT_SIZE,
+      fontFamily: TEXT_FONT_FAMILY,
+      text: text,
+      name: name + "-text",
+      click: (position => {
+        return () => {
+          this.newtab.jumpCaretTo(position);
+        };
+      })(position)
+    });
     return this.canvas_.getLayer(name + "-text");
   }
 
@@ -141,37 +148,38 @@ export default class MindMap {
   }
 
   _initializeCanvas() {
-    let dummyTextLayer = this._drawText(0, 0, "dummy", "");
+    let dummyTextLayer = this._drawText(0, 0, "dummy", "", 0);
     this.canvas_.removeLayer(dummyTextLayer).drawLayers();
   }
 
   _drawRect(x, y, width, height, name) {
     this.canvas_.drawRect({
-                            strokeStyle: "gray",
-                            strokeWidth: 1,
-                            x: x,
-                            y: y,
-                            width: width,
-                            height: height,
-                            cornerRadius: 5,
-                            name: name + "-rect"
-                          });
+      strokeStyle: "gray",
+      strokeWidth: 1,
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+      cornerRadius: 5,
+      name: name + "-rect",
+      intangible: true
+    });
     return this.canvas_.getLayer(name + "-rect");
   }
 
   _drawLine(x1, y1, x2, y2, name) {
     this.canvas_.drawLine({
-                            strokeStyle: "gray",
-                            strokeWidth: 1,
-                            x1: x1, y1: y1,
-                            x2: x2, y2: y2,
-                            name: name + "-line"
-                          });
+      strokeStyle: "gray",
+      strokeWidth: 1,
+      x1: x1, y1: y1,
+      x2: x2, y2: y2,
+      name: name + "-line"
+    });
     return this.canvas_.getLayer(name + "-line");
   }
 
-  _drawCenterNode(x, y, name, text) {
-    let textLayer = this._drawText(x + CENTER_NODE_MARGIN, y + CENTER_NODE_MARGIN, name, text);
+  _drawCenterNode(x, y, name, text, position) {
+    let textLayer = this._drawText(x + CENTER_NODE_MARGIN, y + CENTER_NODE_MARGIN, name, text, position);
     let width = textLayer.width + CENTER_NODE_MARGIN * 2;
     let height = textLayer.height + CENTER_NODE_MARGIN * 2;
     this._drawRect(x, y, width, height, name);
@@ -200,7 +208,7 @@ export default class MindMap {
       if (token.hasUrl()) {
         layer = this._drawLink(cx, y, node.id + "-" + index, token.text, token.url);
       } else {
-        layer = this._drawText(cx, y, node.id + "-" + index, token.text);
+        layer = this._drawText(cx, y, node.id + "-" + index, token.text, node.position);
       }
       cx = cx + layer.width;
     });
