@@ -14,9 +14,10 @@ class Newtab {
     this.localWorkStorage = new LocalWorkStorage(this);
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
     this.localWorkStorage.initialize(() => {
-      this.firebaseWorkStorage.initialize((alreadyLoggedIn) => {
+      this.firebaseWorkStorage.initialize(alreadyLoggedIn => {
         this.mm = new MindMap(this, "#target");
         this.currentWork = Work.newInstance();
+        this.editor = this.initializeAceEditor();
         this.changeUseFirebase(alreadyLoggedIn);
         this.assignEventHandlers();
         this.loadWorkList();
@@ -24,16 +25,24 @@ class Newtab {
     });
   }
 
+  // Ace Editor
+
+  initializeAceEditor() {
+    let editor = ace.edit("source");
+    editor.setFontSize(12);
+    editor.getSession().setUseSoftTabs(false);
+    editor.getSession().setUseWrapMode(false);
+    editor.setShowPrintMargin(false);
+    editor.renderer.setShowGutter(false);
+    editor.$blockScrolling = Infinity;
+    return editor;
+  }
+
   // Event Handlers
 
   assignEventHandlers() {
-    let source = document.querySelector("#source");
-    source.addEventListener("keydown", e => {
-      return this.onSourceKeydowned(e);
-    });
-
-    source.addEventListener("keyup", () => {
-      this.onSourceKeyuped();
+    this.editor.getSession().on("change", () => {
+      this.onEditorSessionChanged();
     });
 
     ["btnLast", "btnDelete", "btnNew", "btnTopSites", "btnConfirmYes",
@@ -55,23 +64,7 @@ class Newtab {
     });
   }
 
-  onSourceKeydowned(e) {
-    var elem, end, start, value;
-    if (e.keyCode === 9) {
-      if (e.preventDefault) {
-        e.preventDefault();
-      }
-      elem = e.target;
-      start = elem.selectionStart;
-      end = elem.selectionEnd;
-      value = elem.value;
-      elem.value = "" + value.substring(0, start) + "\t" + value.substring(end);
-      elem.selectionStart = elem.selectionEnd = start + 1;
-      return false;
-    }
-  }
-
-  onSourceKeyuped() {
+  onEditorSessionChanged() {
     this.drawMindmap(() => {
       this.getWorkStorage().save(this.currentWork, () => {
         this.loadWorkList();
@@ -201,14 +194,14 @@ class Newtab {
   }
 
   onBtnCopyAsPlainTextClicked() {
-    let source = document.querySelector("#source");
-    if (source.value) {
-      this.copyTextToClipboardViaCopyBuffer(source.value);
+    let source = this.editor.getValue();
+    if (source) {
+      this.copyTextToClipboardViaCopyBuffer(source);
     }
   }
 
   onBtnCopyAsMarkdownTextClicked() {
-    let source = document.querySelector("#source").value;
+    let source = this.editor.getValue();
     let root = new Parser().parse(source);
     if (root) {
       let text = "";
@@ -313,7 +306,7 @@ class Newtab {
   // Draw MindMap
 
   drawMindmap(callback) {
-    let source = document.querySelector("#source").value;
+    let source = this.editor.getValue();
     let root = new Parser().parse(source);
     if (root) {
       this.currentWork.content = source;
@@ -349,17 +342,25 @@ class Newtab {
 
   load(work) {
     this.currentWork = work;
-    let source = document.querySelector("#source");
-    source.value = this.currentWork.content;
+    this.editor.setValue(this.currentWork.content);
     this.drawMindmap();
   }
 
   jumpCaretTo(position) {
-    let source = document.querySelector("#source");
-    source.focus();
-    source.selectionStart = position;
-    source.selectionEnd = position;
-    source.scrollTop = position;
+    let source = this.editor.getValue();
+    let lines = source.split(/\n/);
+    let charCount = 0;
+    let row = 0;
+    for (let i = 0; i < lines.length; i += 1) {
+      let eol = lines[i].length + 1;  // '\n'
+      if (position < charCount + eol) {
+        row = i + 1;
+        break;
+      }
+      charCount += eol;
+    }
+    this.editor.gotoLine(row, position - charCount, false);
+    this.editor.focus();
   }
 
   // Utilities

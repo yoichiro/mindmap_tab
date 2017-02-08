@@ -4,10 +4,10 @@ html, body {
   background-color: white;
 }
 
-textarea#source {
+#source {
   width: 100%;
   height: 100%;
-  resize: none;
+  border: lightgray solid 1px;
 }
 
 div.main {
