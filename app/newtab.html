@@ -8,6 +8,7 @@
   <script type="text/javascript" src="bower_components/jcanvas/jcanvas.js"></script>
   <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
+  <script src="libs/ace/ace.js"></script>
   <title>MindMap Tab</title>
 </head>
 <body>
@@ -78,7 +79,7 @@
   <div class="container-fluid main">
     <div class="row">
       <div class="col-md-4">
-        <textarea id="source" class="form-control" wrap="off" placeholder="To change a level, please use TAB key."></textarea>
+        <div id="source"></div>
       </div>
       <div class="col-md-8">
         <div class="canvas-container">

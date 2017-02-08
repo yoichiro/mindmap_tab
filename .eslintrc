@@ -13,7 +13,8 @@
   "globals": {
     "$": true,
     "chrome": true,
-    "firebase": true
+    "firebase": true,
+    "ace": true
   },
   "rules": {
     "block-scoped-var": 2,
