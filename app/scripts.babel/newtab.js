@@ -386,9 +386,13 @@ class Newtab {
   }
 
   load(work) {
+    let cursorPosition = this.editor.getCursorPosition();
     this.currentWork = work;
     this.editor.setValue(this.currentWork.content);
+    this.editor.clearSelection();
     this.drawMindmap();
+    this.editor.focus();
+    this.editor.gotoLine(cursorPosition.row + 1, cursorPosition.column, false);
   }
 
   jumpCaretTo(position) {
