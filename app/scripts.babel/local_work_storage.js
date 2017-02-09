@@ -74,7 +74,7 @@ export default class LocalWorkStorage {
       let keys = Object.keys(contentMap);
       if (keys && keys.length > 0) {
         let max = keys.reduce((p, c) => {
-          return Math.max(p, c);
+          return contentMap[p].updated > contentMap[c].updated ? p : c;
         });
         let data = contentMap[max];
         callback(new Work(data.created, data.content, data.updated));

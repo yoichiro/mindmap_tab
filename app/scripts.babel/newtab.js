@@ -45,10 +45,10 @@ class Newtab {
       this.onEditorSessionChanged();
     });
 
-    ["btnLast", "btnDelete", "btnNew", "btnTopSites", "btnConfirmYes",
-      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
-      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
-      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg"].forEach(name => {
+    ["btnDelete", "btnNew", "btnTopSites", "btnConfirmYes",
+     "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
+     "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
+     "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
@@ -329,7 +329,7 @@ class Newtab {
         link.href = "#";
         let label = work.firstLine + " (" + this.toLocaleString(new Date(work.created)) + ")";
         link.appendChild(document.createTextNode(label));
-        link.addEventListener("click", ((x) => {
+        link.addEventListener("click", (x => {
           return () => {
             this.load(x);
           };
@@ -337,6 +337,21 @@ class Newtab {
         li.appendChild(link);
         history.appendChild(li);
       });
+      if (works.length > 0) {
+        let separator = document.createElement("li");
+        separator.setAttribute("role", "separator");
+        separator.setAttribute("class", "divider");
+        history.appendChild(separator);
+        let lastLi = document.createElement("li");
+        let lastA = document.createElement("a");
+        lastA.href = "#";
+        lastA.innerText = "Last";
+        lastA.addEventListener("click", () => {
+          this.onBtnLastClicked();
+        });
+        lastLi.appendChild(lastA);
+        history.appendChild(lastLi);
+      }
     });
   }
 
