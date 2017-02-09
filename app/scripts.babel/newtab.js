@@ -48,7 +48,9 @@ class Newtab {
     ["btnDelete", "btnNew", "btnTopSites", "btnConfirmYes",
      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
-     "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg"].forEach(name => {
+     "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
+     "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
+     "btnLayoutLeftOnly"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
@@ -62,6 +64,34 @@ class Newtab {
     $("#createUserDialog").on("shown.bs.modal", () => {
       $("#inputNewEmail").focus();
     });
+  }
+
+  onBtnLayoutRightMainClicked() {
+    let leftColumn = document.querySelector("#leftColumn");
+    let rightColumn = document.querySelector("#rightColumn");
+    leftColumn.setAttribute("class", "show col-md-4");
+    rightColumn.setAttribute("class", "show col-md-8");
+  }
+
+  onBtnLayoutLeftMainClicked() {
+    let leftColumn = document.querySelector("#leftColumn");
+    let rightColumn = document.querySelector("#rightColumn");
+    leftColumn.setAttribute("class", "show col-md-8");
+    rightColumn.setAttribute("class", "show col-md-4");
+  }
+
+  onBtnLayoutRightOnlyClicked() {
+    let leftColumn = document.querySelector("#leftColumn");
+    let rightColumn = document.querySelector("#rightColumn");
+    leftColumn.setAttribute("class", "hidden");
+    rightColumn.setAttribute("class", "show col-md-12");
+  }
+
+  onBtnLayoutLeftOnlyClicked() {
+    let leftColumn = document.querySelector("#leftColumn");
+    let rightColumn = document.querySelector("#rightColumn");
+    leftColumn.setAttribute("class", "show col-md-12");
+    rightColumn.setAttribute("class", "hidden");
   }
 
   onEditorSessionChanged() {
