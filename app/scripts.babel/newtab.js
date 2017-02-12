@@ -10,6 +10,8 @@ class Newtab {
 
   constructor() {
     this.useFirebase = false;
+    this.typing = false;
+    this.loading = false;
 
     this.localWorkStorage = new LocalWorkStorage(this);
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
@@ -95,10 +97,13 @@ class Newtab {
   }
 
   onEditorSessionChanged() {
+    this.typing = true;
     this.drawMindmap(() => {
-      this.getWorkStorage().save(this.currentWork, () => {
-        this.loadWorkList();
-      });
+      if (!this.loading) {
+        this.getWorkStorage().save(this.currentWork, () => {
+          this.loadWorkList();
+        });
+      }
     });
   }
 
@@ -288,15 +293,18 @@ class Newtab {
 
   onWorkAdded() {
     this.loadWorkList();
+    this.typing = false;
   }
 
   onWorkChanged(key, changedWork) {
     this.loadWorkList();
-    if (this.currentWork
+    if (!this.typing
+      && this.currentWork
       && this.currentWork.created === changedWork.created
       && this.currentWork.content !== changedWork.content) {
       this.load(changedWork);
     }
+    this.typing = false;
   }
 
   onWorkRemoved(key, removedWork) {
@@ -305,6 +313,7 @@ class Newtab {
       && this.currentWork.created === removedWork.created) {
       this.load(Work.newInstance());
     }
+    this.typing = false;
   }
 
   updateBtnOnlineText() {
@@ -386,6 +395,7 @@ class Newtab {
   }
 
   load(work) {
+    this.loading = true;
     let cursorPosition = this.editor.getCursorPosition();
     this.currentWork = work;
     this.editor.setValue(this.currentWork.content);
@@ -393,6 +403,7 @@ class Newtab {
     this.drawMindmap();
     this.editor.focus();
     this.editor.gotoLine(cursorPosition.row + 1, cursorPosition.column, false);
+    this.loading = false;
   }
 
   jumpCaretTo(position) {
