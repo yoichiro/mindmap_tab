@@ -37,6 +37,10 @@ export default class Node {
     return this.tokens.map(token => { return token.text; }).join("");
   }
 
+  get html() {
+    return this.tokens.map(token => { return token.toHtml(); }).join("");
+  }
+
   static root(text) {
     return new Node(text, 0);
   }
