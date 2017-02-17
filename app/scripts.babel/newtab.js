@@ -52,7 +52,7 @@ class Newtab {
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
      "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
-     "btnLayoutLeftOnly"].forEach(name => {
+     "btnLayoutLeftOnly", "btnCopyAsHtmlText"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
@@ -252,6 +252,43 @@ class Newtab {
         }
       };
       traverse(root, 0);
+      this.copyTextToClipboardViaCopyBuffer(text);
+    }
+  }
+
+  onBtnCopyAsHtmlTextClicked() {
+    let source = this.editor.getValue();
+    let root = new Parser().parse(source);
+    if (root) {
+      let text = "<ul>\n";
+      let traverse = (node, currentLevel) => {
+        for (let i = 0; i < currentLevel; i += 1) {
+          text += "  ";
+        }
+        text += "<li>" + node.html;
+        if (!node.isLeaf()) {
+          currentLevel += 1;
+          text += "\n";
+          for (let i = 0; i < currentLevel; i += 1) {
+            text += "  ";
+          }
+          text += "<ul>\n";
+          node.children.forEach(child => {
+            traverse(child, currentLevel + 1);
+          });
+          for (let i = 0; i < currentLevel; i += 1) {
+            text += "  ";
+          }
+          text += "</ul>\n";
+          currentLevel -= 1;
+          for (let i = 0; i < currentLevel; i += 1) {
+            text += "  ";
+          }
+        }
+        text += "</li>\n";
+      };
+      traverse(root, 1);
+      text += "</ul>"
       this.copyTextToClipboardViaCopyBuffer(text);
     }
   }
