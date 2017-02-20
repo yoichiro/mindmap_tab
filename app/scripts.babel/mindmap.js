@@ -22,6 +22,7 @@ export default class MindMap {
     this.canvasDom_ = document.querySelector(targetElementId);
     this.canvas_ = $(this.canvasDom_);
     this._initializeCanvas();
+    this._setupCanvasMoving();
   }
 
   // Public functions
@@ -75,6 +76,34 @@ export default class MindMap {
   }
 
   // Private functions
+
+  _setupCanvasMoving() {
+    let x, y, sx, sy, dragging;
+    this.canvasDom_.addEventListener("mousedown", e => {
+      x = e.pageX;
+      y = e.pageY;
+      sx = this.canvasDom_.parentNode.scrollLeft;
+      sy = this.canvasDom_.parentNode.scrollTop;
+      dragging = true;
+      this.canvasDom_.style.cursor = "move";
+    });
+    this.canvasDom_.addEventListener("mousemove", e => {
+      if (dragging) {
+        console.log(x, y);
+        console.log(e.pageX - x, e.pageY - y);
+        this.canvasDom_.parentNode.scrollLeft = sx - (e.pageX - x);
+        this.canvasDom_.parentNode.scrollTop = sy - (e.pageY - y);
+      }
+    });
+    this.canvasDom_.addEventListener("mouseup", () => {
+      dragging = false;
+      this.canvasDom_.style.cursor = "default";
+    });
+    this.canvasDom_.addEventListener("mouseleave", () => {
+      dragging = false;
+      this.canvasDom_.style.cursor = "default";
+    });
+  }
 
   _setNodeId(node) {
     let id = 0;
