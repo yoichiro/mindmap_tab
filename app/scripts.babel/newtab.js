@@ -12,6 +12,7 @@ class Newtab {
     this.useFirebase = false;
     this.typing = false;
     this.loading = false;
+    this.timer = false;
 
     this.localWorkStorage = new LocalWorkStorage(this);
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
@@ -97,14 +98,20 @@ class Newtab {
   }
 
   onEditorSessionChanged() {
-    this.typing = true;
-    this.drawMindmap(() => {
-      if (!this.loading) {
-        this.getWorkStorage().save(this.currentWork, () => {
-          this.loadWorkList();
-        });
-      }
-    });
+    if (this.timer !== false) {
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout(() => {
+      this.typing = true;
+      this.drawMindmap(() => {
+        if (!this.loading) {
+          this.getWorkStorage().save(this.currentWork, () => {
+            this.loadWorkList();
+            this.timer = false;
+          });
+        }
+      });
+    }, 2000);
   }
 
   onBtnLastClicked() {
