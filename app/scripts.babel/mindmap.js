@@ -309,7 +309,7 @@ export default class MindMap {
         let leftSum = leafCountList.slice(0, index + 1).reduce(sum);
         let rightSum = leafCountList.slice(index + 1).reduce(sum);
         let delta = Math.abs(leftSum - rightSum);
-        if (minDelta) {
+        if (minDelta !== null) {
           if (delta < minDelta) {
             minDelta = delta;
             divideIndex = index;
@@ -332,9 +332,11 @@ export default class MindMap {
 
   _getAllTextLength(nodes) {
     if (nodes.length > 0) {
-      return this._sum(nodes.map(x => {
+      let sizes = nodes.map(x => {
         return this._measureText(x.text);
-      }));
+      });
+      sizes.push((sizes.length - 1) * NODE_MARGIN_WIDTH);
+      return this._sum(sizes);
     } else {
       return 0;
     }
