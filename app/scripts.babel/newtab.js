@@ -3,8 +3,9 @@
 import MindMap from "./mindmap.js";
 import Parser from "./parser.js";
 import Work from "./work.js";
-import LocalWorkStorage from "./local_work_storage.js";
+import ChromeWorkStorage from "./chrome_work_storage.js";
 import FirebaseWorkStorage from "./firebase_work_storage.js";
+import LocalWorkStorage from "./local_work_storage.js";
 
 class Newtab {
 
@@ -14,16 +15,19 @@ class Newtab {
     this.loading = false;
     this.timer = false;
 
-    this.localWorkStorage = new LocalWorkStorage(this);
+    this.chromeWorkStorage = new ChromeWorkStorage(this);
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
+    this.localWorkStorage = new LocalWorkStorage(this);
     this.localWorkStorage.initialize(() => {
-      this.firebaseWorkStorage.initialize(alreadyLoggedIn => {
-        this.mm = new MindMap(this, "#target");
-        this.currentWork = Work.newInstance();
-        this.editor = this.initializeAceEditor();
-        this.changeUseFirebase(alreadyLoggedIn);
-        this.assignEventHandlers();
-        this.loadWorkList();
+      this.chromeWorkStorage.initialize(() => {
+        this.firebaseWorkStorage.initialize(alreadyLoggedIn => {
+          this.mm = new MindMap(this, "#target");
+          this.currentWork = Work.newInstance();
+          this.editor = this.initializeAceEditor();
+          this.changeUseFirebase(alreadyLoggedIn);
+          this.assignEventHandlers();
+          this.loadWorkList();
+        });
       });
     });
   }
@@ -375,6 +379,8 @@ class Newtab {
   getWorkStorage() {
     if (this.useFirebase) {
       return this.firebaseWorkStorage;
+    } else if (window.chrome !== undefined && chrome.storage !== undefined) {
+      return this.chromeWorkStorage;
     } else {
       return this.localWorkStorage;
     }
@@ -480,14 +486,23 @@ class Newtab {
         });
         history.appendChild(lastA);
       }
-      const topSitesA = document.createElement("a");
-      topSitesA.href = "#";
-      topSitesA.setAttribute("class", "dropdown-item");
-      topSitesA.innerText = "Top sites";
-      topSitesA.addEventListener("click", () => {
-        this.onBtnTopSitesClicked();
-      });
-      history.appendChild(topSitesA);
+      if (this.getWorkStorage().canProvideTopSites()) {
+        const topSitesA = document.createElement("a");
+        topSitesA.href = "#";
+        topSitesA.setAttribute("class", "dropdown-item");
+        topSitesA.innerText = "Top sites";
+        topSitesA.addEventListener("click", () => {
+          this.onBtnTopSitesClicked();
+        });
+        history.appendChild(topSitesA);
+      } else {
+        if (works.length === 0) {
+          const h6 = document.createElement("h6");
+          h6.setAttribute("class", "dropdown-header");
+          h6.appendChild(document.createTextNode("None"));
+          history.appendChild(h6);
+        }
+      }
     });
   }
 

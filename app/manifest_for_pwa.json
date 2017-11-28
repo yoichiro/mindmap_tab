@@ -1,0 +1,18 @@
+{
+  "short_name": "MindMap Tab",
+  "name": "MindMap Tab",
+  "icons": [
+    {
+      "src": "images/icon-128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "images/icon-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone"
+}
