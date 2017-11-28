@@ -309,7 +309,7 @@ export default class MindMap {
         let leftSum = leafCountList.slice(0, index + 1).reduce(sum);
         let rightSum = leafCountList.slice(index + 1).reduce(sum);
         let delta = Math.abs(leftSum - rightSum);
-        if (minDelta) {
+        if (minDelta !== null) {
           if (delta < minDelta) {
             minDelta = delta;
             divideIndex = index;
