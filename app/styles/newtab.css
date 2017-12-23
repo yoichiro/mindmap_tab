@@ -68,3 +68,8 @@ nav {
 .errorMessage {
   color: red;
 }
+
+#history {
+  max-height: 500px;
+  overflow-y: auto;
+}
