@@ -133,9 +133,9 @@ export default class MindMap {
     return this.canvasDom_.getContext("2d").measureText(text).width;
   }
 
-  _drawText(x, y, name, text, position) {
+  _drawText(x, y, name, text, position, bold, strikeThrough) {
     this.canvas_.drawText({
-      fillStyle: "black",
+      fillStyle: strikeThrough ? "lightgray" : bold ? "red" : "black",
       // strokeStyle: "black",
       strokeWidth: "0",
       x: x,
@@ -177,7 +177,7 @@ export default class MindMap {
   }
 
   _initializeCanvas() {
-    let dummyTextLayer = this._drawText(0, 0, "dummy", "", 0);
+    let dummyTextLayer = this._drawText(0, 0, "dummy", "", 0, false, false);
     this.canvas_.removeLayer(dummyTextLayer).drawLayers();
   }
 
@@ -208,7 +208,7 @@ export default class MindMap {
   }
 
   _drawCenterNode(x, y, name, text, position) {
-    let textLayer = this._drawText(x + CENTER_NODE_MARGIN, y + CENTER_NODE_MARGIN, name, text, position);
+    let textLayer = this._drawText(x + CENTER_NODE_MARGIN, y + CENTER_NODE_MARGIN, name, text, position, false, false);
     let width = textLayer.width + CENTER_NODE_MARGIN * 2;
     let height = textLayer.height + CENTER_NODE_MARGIN * 2;
     this._drawRect(x, y, width, height, name);
@@ -237,7 +237,7 @@ export default class MindMap {
       if (token.hasUrl()) {
         layer = this._drawLink(cx, y, node.id + "-" + index, token.text, token.url);
       } else {
-        layer = this._drawText(cx, y, node.id + "-" + index, token.text, node.position);
+        layer = this._drawText(cx, y, node.id + "-" + index, token.text, node.position, token.isBold(), token.isStrikeThrough());
       }
       cx = cx + layer.width;
     });
