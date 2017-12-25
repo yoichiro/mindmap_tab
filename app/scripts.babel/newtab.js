@@ -53,7 +53,7 @@ class Newtab {
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
      "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
-     "btnLayoutLeftOnly", "btnCopyAsHtmlText"].forEach(name => {
+     "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnChangeLineColorMode"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
@@ -67,6 +67,11 @@ class Newtab {
     $("#createUserDialog").on("shown.bs.modal", () => {
       $("#inputNewEmail").focus();
     });
+  }
+
+  onBtnChangeLineColorModeClicked() {
+    this.mm.changeLineColorMode();
+    this.drawMindmap();
   }
 
   onBtnLayoutRightMainClicked() {
