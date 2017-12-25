@@ -12,6 +12,8 @@ const NODE_LINE_MARGIN = 5;
 const CENTER_NODE_MARGIN = 5;
 const NODE_HEIGHT = TEXT_FONT_SIZE + NODE_LINE_MARGIN + 1;
 const NODE_HEIGHT_WITH_MARGIN = NODE_HEIGHT + NODE_MARGIN_HEIGHT;
+const LINE_COLORS = ["#0000AA", "#00AA00", "#00AAAA", "#AA0000", "#AA00AA", "#AAAA00"];
+const DEFAULT_LINE_COLOR = "gray";
 
 export default class MindMap {
 
@@ -61,6 +63,7 @@ export default class MindMap {
     // this.canvas_.clearCanvas();
     this.canvas_.removeLayers();
     this.canvas_.drawLayers();
+    this._resetLineColorIndex();
   }
 
   saveAsImage(title, format) {
@@ -75,7 +78,32 @@ export default class MindMap {
     }, "image/" + format);
   }
 
+  changeLineColorMode() {
+    const lineColorMode = JSON.parse(localStorage.lineColorMode || "false");
+    localStorage.lineColorMode = !lineColorMode;
+  }
+
   // Private functions
+
+  _resetLineColorIndex() {
+    this.lineColorIndex = 0;
+  }
+
+  _changeLineColorIndex() {
+    this.lineColorIndex += 1;
+    if (LINE_COLORS.length <= this.lineColorIndex) {
+      this.lineColorIndex = 0;
+    }
+  }
+
+  _getLineColor() {
+    const lineColorMode = JSON.parse(localStorage.lineColorMode || "false");
+    if (lineColorMode) {
+      return LINE_COLORS[this.lineColorIndex];
+    } else {
+      return DEFAULT_LINE_COLOR;
+    }
+  }
 
   _setupCanvasMoving() {
     let x, y, sx, sy, dragging;
@@ -198,7 +226,7 @@ export default class MindMap {
 
   _drawLine(x1, y1, x2, y2, name) {
     this.canvas_.drawLine({
-      strokeStyle: "gray",
+      strokeStyle: this._getLineColor(),
       strokeWidth: 1,
       x1: x1, y1: y1,
       x2: x2, y2: y2,
@@ -254,7 +282,7 @@ export default class MindMap {
     let x2 = isLeft ? centerNodeBounds.x1 : centerNodeBounds.x2;
     let y2 = centerNodeBounds.y1 + centerNodeBounds.height / 2;
     this.canvas_.drawBezier({
-                              strokeStyle: "gray",
+                              strokeStyle: this._getLineColor(),
                               strokeWidth: 1,
                               x1: x1, y1: y1,
                               cx1: cx1, cy1: cy1,
@@ -275,7 +303,7 @@ export default class MindMap {
     let x2 = isLeft ? parentBounds.x1 : parentBounds.x2;
     let y2 = parentBounds.y2;
     this.canvas_.drawBezier({
-                              strokeStyle: "gray",
+                              strokeStyle: this._getLineColor(),
                               strokeWidth: 1,
                               x1: x1, y1: y1,
                               cx1: cx1, cy1: cy1,
@@ -410,6 +438,7 @@ export default class MindMap {
       this._connectNodeToCenterNode(nodeBounds, centerNodeBounds, node.id);
       this._drawLeftNodeChildrenFromNode(node.children, nodeBounds, currentHeight);
       currentHeight += allNodesHeight;
+      this._changeLineColorIndex();
     });
   }
 
@@ -436,6 +465,7 @@ export default class MindMap {
       this._connectNodeToCenterNode(nodeBounds, centerNodeBounds, node.id);
       this._drawRightNodeChildrenFromNode(node.children, nodeBounds, currentHeight);
       currentHeight += allNodesHeight;
+      this._changeLineColorIndex();
     });
   }
 
