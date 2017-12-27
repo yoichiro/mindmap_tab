@@ -52,8 +52,15 @@ export default class MindMap {
       root.text,
       root.position);
 
-    this._drawLeftNodeChildrenFromCenterNode(leftChildren, centerNodeBounds);
-    this._drawRightNodeChildrenFromCenterNode(rightChildren, centerNodeBounds);
+    let leftHeightMargin = 0;
+    let rightHeightMargin = 0;
+    if (canvasSize.leftHeight < canvasSize.rightHeight) {
+      leftHeightMargin = (canvasSize.rightHeight - canvasSize.leftHeight) / 2;
+    } else {
+      rightHeightMargin = (canvasSize.leftHeight - canvasSize.rightHeight) / 2;
+    }
+    this._drawLeftNodeChildrenFromCenterNode(leftChildren, centerNodeBounds, leftHeightMargin);
+    this._drawRightNodeChildrenFromCenterNode(rightChildren, centerNodeBounds, rightHeightMargin);
 
     this._adjustCanvasSize(canvasSize);
   }
@@ -446,8 +453,8 @@ export default class MindMap {
     });
   }
 
-  _drawLeftNodeChildrenFromCenterNode(children, centerNodeBounds) {
-    let currentHeight = 0;
+  _drawLeftNodeChildrenFromCenterNode(children, centerNodeBounds, topMargin) {
+    let currentHeight = topMargin;
     children.forEach(node => {
       let allNodesHeight = this._getLeafCount(node) * this._getNodeHeightWithMargin();
       let y = currentHeight + allNodesHeight / 2 - this._getNodeHeight() / 2;
@@ -473,8 +480,8 @@ export default class MindMap {
     });
   }
 
-  _drawRightNodeChildrenFromCenterNode(children, centerNodeBounds) {
-    let currentHeight = 0;
+  _drawRightNodeChildrenFromCenterNode(children, centerNodeBounds, topMargin) {
+    let currentHeight = topMargin;
     children.forEach(node => {
       let allNodesHeight = this._getLeafCount(node) * this._getNodeHeightWithMargin();
       let y = currentHeight + allNodesHeight / 2 - this._getNodeHeight() / 2;
