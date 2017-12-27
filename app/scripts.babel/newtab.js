@@ -32,7 +32,7 @@ class Newtab {
 
   initializeAceEditor() {
     let editor = ace.edit("source");
-    editor.setFontSize(12);
+    editor.setFontSize(13);
     editor.getSession().setUseSoftTabs(false);
     editor.getSession().setUseWrapMode(false);
     editor.setShowPrintMargin(false);
@@ -48,7 +48,7 @@ class Newtab {
       this.onEditorSessionChanged();
     });
 
-    ["btnDelete", "btnNew", "btnTopSites", "btnConfirmYes",
+    ["btnDelete", "btnNew", "btnConfirmYes",
      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
@@ -58,6 +58,16 @@ class Newtab {
       element.addEventListener("click", () => {
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
       });
+    });
+
+    [10, 12, 14, 16, 18, 24, 36].forEach(fontSize => {
+      let element = document.querySelector("#btnFontSize" + fontSize);
+      element.addEventListener("click", ((fontSize) => {
+        return () => {
+          localStorage.fontSize = fontSize;
+          this.drawMindmap();
+        };
+      })(fontSize));
     });
 
     $("#loginDialog").on("shown.bs.modal", () => {
@@ -440,6 +450,15 @@ class Newtab {
         lastLi.appendChild(lastA);
         history.appendChild(lastLi);
       }
+      let topSitesLi = document.createElement("li");
+      let topSitesA = document.createElement("a");
+      topSitesA.href = "#";
+      topSitesA.innerText = "Top sites";
+      topSitesA.addEventListener("click", () => {
+        this.onBtnTopSitesClicked();
+      });
+      topSitesLi.appendChild(topSitesA);
+      history.appendChild(topSitesLi);
     });
   }
 
