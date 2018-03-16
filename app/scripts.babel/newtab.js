@@ -47,13 +47,17 @@ class Newtab {
     this.editor.getSession().on("change", () => {
       this.onEditorSessionChanged();
     });
+    this.editor.getSession().getSelection().on("changeSelection", () => {
+      this.onEditorSelectionChanged();
+    });
 
     ["btnDelete", "btnNew", "btnConfirmYes",
      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
      "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
-     "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnChangeLineColorMode"].forEach(name => {
+     "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnChangeLineColorMode",
+     "btnEditBold", "btnEditStrikeThrough"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
@@ -77,6 +81,22 @@ class Newtab {
     $("#createUserDialog").on("shown.bs.modal", () => {
       $("#inputNewEmail").focus();
     });
+  }
+
+  onBtnEditBoldClicked() {
+    const selectionRange = this.editor.getSelectionRange();
+    const textRange = this.editor.getSession().getTextRange(selectionRange);
+    if (textRange.length > 0) {
+      this.editor.getSession().replace(selectionRange, `**${textRange}**`);
+    }
+  }
+
+  onBtnEditStrikeThroughClicked() {
+    const selectionRange = this.editor.getSelectionRange();
+    const textRange = this.editor.getSession().getTextRange(selectionRange);
+    if (textRange.length > 0) {
+      this.editor.getSession().replace(selectionRange, `~~${textRange}~~`);
+    }
   }
 
   onBtnChangeLineColorModeClicked() {
@@ -127,6 +147,16 @@ class Newtab {
         }
       });
     }, 2000);
+  }
+
+  onEditorSelectionChanged() {
+    const selectionRange = this.editor.getSelectionRange();
+    const textRange = this.editor.getSession().getTextRange(selectionRange);
+    if (textRange.length > 0) {
+      $(".dropdownEditItem").removeClass("disabled");
+    } else {
+      $(".dropdownEditItem").addClass("disabled");
+    }
   }
 
   onBtnLastClicked() {
