@@ -417,14 +417,12 @@ class Newtab {
   // For Clipboard
 
   copyTextToClipboardViaCopyBuffer(text) {
-    let copyBuffer = document.querySelector("#copyBuffer");
+    const copyBuffer = document.querySelector("#copyBuffer");
     copyBuffer.value = text;
-    let range = document.createRange();
-    range.selectNode(copyBuffer);
-    window.getSelection().addRange(range);
+    copyBuffer.select();
     try {
-      var result = document.execCommand("copy");
-      let msg = result ? "successful" : "unsuccessful";
+      const result = document.execCommand("copy");
+      const msg = result ? "successful" : "unsuccessful";
       console.log("Copy source text was " + msg);
     } catch (e) {
       console.log("Oops, unable to copy");

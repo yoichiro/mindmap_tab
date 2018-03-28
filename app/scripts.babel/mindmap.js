@@ -73,13 +73,12 @@ export default class MindMap {
 
   saveAsImage(title, format) {
     this.canvasDom_.toBlob(blob => {
-      let anchor = document.createElement("a");
-      let url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      const url = window.URL.createObjectURL(blob);
       anchor.href = url;
       anchor.target = "_blank";
       anchor.download = title + "." + format;
       anchor.click();
-      window.URL.revokeObjectURL(url);
     }, "image/" + format);
   }
 
