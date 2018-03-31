@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "dependencies": {
     "jcanvas": "^15.12.12",
-    "bootstrap": "^3.3.6",
+    "bootstrap": "^4.0.0",
     "commonjs": "^0.2.0",
     "react": "^15.0.1"
   },

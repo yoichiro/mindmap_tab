@@ -107,29 +107,29 @@ class Newtab {
   onBtnLayoutRightMainClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "show col-md-4");
-    rightColumn.setAttribute("class", "show col-md-8");
+    leftColumn.setAttribute("class", "d-block col-md-4");
+    rightColumn.setAttribute("class", "d-block col-md-8");
   }
 
   onBtnLayoutLeftMainClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "show col-md-8");
-    rightColumn.setAttribute("class", "show col-md-4");
+    leftColumn.setAttribute("class", "d-block col-md-8");
+    rightColumn.setAttribute("class", "d-block col-md-4");
   }
 
   onBtnLayoutRightOnlyClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "hidden");
-    rightColumn.setAttribute("class", "show col-md-12");
+    leftColumn.setAttribute("class", "d-none");
+    rightColumn.setAttribute("class", "d-block col-md-12");
   }
 
   onBtnLayoutLeftOnlyClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "show col-md-12");
-    rightColumn.setAttribute("class", "hidden");
+    leftColumn.setAttribute("class", "d-block col-md-12");
+    rightColumn.setAttribute("class", "d-none");
   }
 
   onEditorSessionChanged() {
@@ -450,43 +450,44 @@ class Newtab {
       let history = document.querySelector("#history");
       history.innerHTML = "";
       works.forEach(work => {
-        let li = document.createElement("li");
-        let link = document.createElement("a");
+        const link = document.createElement("a");
         link.href = "#";
-        let label = work.firstLine + " (" + this.toLocaleString(new Date(work.created)) + ")";
+        link.setAttribute("class", "dropdown-item");
+        const label = work.firstLine;
         link.appendChild(document.createTextNode(label));
+        link.appendChild(document.createElement("br"));
+        const date = document.createElement("span");
+        date.setAttribute("class", "date");
+        date.appendChild(document.createTextNode("(" + this.toLocaleString(new Date(work.created)) + ")"))
+        link.appendChild(date);
         link.addEventListener("click", (x => {
           return () => {
             this.load(x);
           };
         })(work));
-        li.appendChild(link);
-        history.appendChild(li);
+        history.appendChild(link);
       });
       if (works.length > 0) {
-        let separator = document.createElement("li");
-        separator.setAttribute("role", "separator");
-        separator.setAttribute("class", "divider");
+        const separator = document.createElement("div");
+        separator.setAttribute("class", "dropdown-divider");
         history.appendChild(separator);
-        let lastLi = document.createElement("li");
-        let lastA = document.createElement("a");
+        const lastA = document.createElement("a");
         lastA.href = "#";
+        lastA.setAttribute("class", "dropdown-item");
         lastA.innerText = "Last";
         lastA.addEventListener("click", () => {
           this.onBtnLastClicked();
         });
-        lastLi.appendChild(lastA);
-        history.appendChild(lastLi);
+        history.appendChild(lastA);
       }
-      let topSitesLi = document.createElement("li");
-      let topSitesA = document.createElement("a");
+      const topSitesA = document.createElement("a");
       topSitesA.href = "#";
+      topSitesA.setAttribute("class", "dropdown-item");
       topSitesA.innerText = "Top sites";
       topSitesA.addEventListener("click", () => {
         this.onBtnTopSitesClicked();
       });
-      topSitesLi.appendChild(topSitesA);
-      history.appendChild(topSitesLi);
+      history.appendChild(topSitesA);
     });
   }
 
