@@ -13,121 +13,87 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <span class="navbar-brand">MindMap Tab</span>
-      </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-left">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="History"><b class="caret"></b>History</a>
-            <ul class="dropdown-menu" id="history">
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Edit"><b class="caret"></b>Edit</a>
-            <ul class="dropdown-menu" id="edit">
-              <li class="dropdownEditItem">
-                <a href="#" id="btnEditBold">Bold</a>
-              </li>
-              <li class="dropdownEditItem">
-                <a href="#" id="btnEditStrikeThrough">Strike Through</a>
-              </li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Copy"><b class="caret"></b>Copy</a>
-            <ul class="dropdown-menu" id="copy">
-              <li>
-                <a href="#" id="btnCopyAsPlainText">Copy as Plain Text</a>
-              </li>
-              <li>
-                <a href="#" id="btnCopyAsMarkdownText">Copy as Markdown Text</a>
-              </li>
-              <li>
-                <a href="#" id="btnCopyAsHtmlText">Copy as HTML</a>
-              </li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Export"><b class="caret"></b>Export</a>
-            <ul class="dropdown-menu" id="export">
-              <li>
-                <a href="#" id="btnExportAsPng">Export as PNG</a>
-              </li>
-              <li>
-                <a href="#" id="btnExportAsJpeg">Export as JPEG</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#" id="btnNew">
-              <span>New</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" id="btnDelete">
-              <span>Delete</span>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Layout"><b class="caret"></b>Configuration</a>
-            <ul class="dropdown-menu" id="layout">
-              <li class="dropdown-header">
-                Layout
-              </li>
-              <li>
-                <a href="#" id="btnLayoutRightMain">Focus on MindMap</a>
-              </li>
-              <li>
-                <a href="#" id="btnLayoutLeftMain">Focus on Text</a>
-              </li>
-              <li>
-                <a href="#" id="btnLayoutRightOnly">MindMap only</a>
-              </li>
-              <li>
-                <a href="#" id="btnLayoutLeftOnly">Text only</a>
-              </li>
-              <li class="dropdown-header">
-                Color mode
-              </li>
-              <li>
-                <a href="#" id="btnChangeLineColorMode">Change Line Color Mode</a>
-              </li>
-              <li class="dropdown-header">
-                Font size
-              </li>
-              <li>
-                <a href="#" id="btnFontSize10">10 pixels</a>
-              </li>
-              <li>
-                <a href="#" id="btnFontSize12">12 pixels</a>
-              </li>
-              <li>
-                <a href="#" id="btnFontSize14">14 pixels</a>
-              </li>
-              <li>
-                <a href="#" id="btnFontSize16">16 pixels</a>
-              </li>
-              <li>
-                <a href="#" id="btnFontSize18">18 pixels</a>
-              </li>
-              <li>
-                <a href="#" id="btnFontSize24">24 pixels</a>
-              </li>
-              <li>
-                <a href="#" id="btnFontSize36">36 pixels</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#" id="btnOnline">
-              <span id="lblOnline"></span>
-            </a>
-          </li>
-        </ul>
-      </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">MindMap Tab</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarHistory" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            History
+          </a>
+          <div class="dropdown-menu" id="history" aria-labelledby="navbarHistory">
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarEdit" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Edit
+          </a>
+          <div class="dropdown-menu" id="edit" aria-labelledby="navbarEdit">
+            <a class="dropdown-item dropdownEditItem" href="#" id="btnEditBold">Bold</a>
+            <a class="dropdown-item dropdownEditItem" href="#" id="btnEditStrikeThrough">Strike Through</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarCopy" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Copy
+          </a>
+          <div class="dropdown-menu" id="copy" aria-labelledby="navbarCopy">
+            <a class="dropdown-item" href="#" id="btnCopyAsPlainText">Copy as Plain Text</a>
+            <a class="dropdown-item" href="#" id="btnCopyAsMarkdownText">Copy as Markdown Text</a>
+            <a class="dropdown-item" href="#" id="btnCopyAsHtmlText">Copy as HTML</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarExport" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Export
+          </a>
+          <div class="dropdown-menu" id="export" aria-labelledby="navbarExport">
+            <a class="dropdown-item" href="#" id="btnExportAsPng">Export as PNG</a>
+            <a class="dropdown-item" href="#" id="btnExportAsJpeg">Export as JPEG</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="btnNew">
+            New
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="btnDelete">
+            Delete
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarConfiguration" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Configuration
+          </a>
+          <div class="dropdown-menu" id="layout" aria-labelledby="navbarConfiguration">
+            <h6 class="dropdown-header">Layout</h6>
+            <a class="dropdown-item" href="#" id="btnLayoutRightMain">Focus on MindMap</a>
+            <a class="dropdown-item" href="#" id="btnLayoutLeftMain">Focus on Text</a>
+            <a class="dropdown-item" href="#" id="btnLayoutRightOnly">MindMap only</a>
+            <a class="dropdown-item" href="#" id="btnLayoutLeftOnly">Text only</a>
+            <h6 class="dropdown-header">Color mode</h6>
+            <a class="dropdown-item" href="#" id="btnChangeLineColorMode">Change Line Color Mode</a>
+            <h6 class="dropdown-header">Font size</h6>
+            <a class="dropdown-item" href="#" id="btnFontSize10">10 pixels</a>
+            <a class="dropdown-item" href="#" id="btnFontSize12">12 pixels</a>
+            <a class="dropdown-item" href="#" id="btnFontSize14">14 pixels</a>
+            <a class="dropdown-item" href="#" id="btnFontSize16">16 pixels</a>
+            <a class="dropdown-item" href="#" id="btnFontSize18">18 pixels</a>
+            <a class="dropdown-item" href="#" id="btnFontSize24">24 pixels</a>
+            <a class="dropdown-item" href="#" id="btnFontSize36">36 pixels</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="btnOnline">
+            <span id="lblOnline"></span>
+          </a>
+        </li>
+      </ul>
     </div>
   </nav>
 
