@@ -2,7 +2,7 @@
 
 import Work from "./work.js";
 
-export default class LocalWorkStorage {
+export default class ChromeWorkStorage {
 
   constructor(newtab) {
     this._newtab = newtab;
@@ -17,7 +17,7 @@ export default class LocalWorkStorage {
   }
 
   canProvideTopSites() {
-    return false;
+    return true;
   }
 
   logout(callback) {
@@ -36,10 +36,15 @@ export default class LocalWorkStorage {
           content: work.content,
           updated: work.updated
         };
-        localStorage.setItem("contentMap", JSON.stringify(contentMap));
-        if (callback) {
-          callback();
-        }
+        chrome.storage.local.set(
+          {
+            contentMap: contentMap
+          }, () => {
+            if (callback) {
+              callback();
+            }
+          }
+        );
       });
     } else {
       if (callback) {
@@ -84,27 +89,30 @@ export default class LocalWorkStorage {
   }
 
   removeAll(callback) {
-    localStorage.removeItem("contentMap");
-    if (callback) {
+    chrome.storage.local.set({
+      contentMap: {}
+    }, () => {
       callback();
-    }
+    });
   }
 
   remove(work, callback) {
     this._getAll(contentMap => {
       delete contentMap[work.created];
-      localStorage.setItem("contentMap", JSON.stringify(contentMap));
-      if (callback) {
+      chrome.storage.local.set({
+        contentMap: contentMap
+      }, () => {
         callback();
-      }
+      });
     });
   }
 
   // Private functions
 
   _getAll(callback) {
-    let contentMap = localStorage.getItem("contentMap");
-    callback(contentMap ? JSON.parse(contentMap) : {});
+    chrome.storage.local.get("contentMap", item => {
+      callback(item.contentMap || {});
+    });
   }
 
 }

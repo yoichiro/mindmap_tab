@@ -23,6 +23,10 @@ export default class FirebaseWorkStorage {
     });
   }
 
+  canProvideTopSites() {
+    return false;
+  }
+
   logout(callback) {
     this._stopObservation();
     firebase.auth().signOut()

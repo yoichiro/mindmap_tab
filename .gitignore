@@ -8,3 +8,4 @@ test/bower_components
 package
 app/scripts
 .DS_Store
+app/service_worker*.js
