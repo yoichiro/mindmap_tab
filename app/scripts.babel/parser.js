@@ -13,7 +13,7 @@ export default class Parser {
     let prevLevel = -1;
     let position = 0;
     for (let i = 0; i < lines.length; i += 1) {
-      if (lines[i].trim()) {
+      if (this._trim(lines[i])) {
         let level = this._getIndentLevel(lines[i]);
         if (i === 0) {
           if (level === 0) {
@@ -76,14 +76,34 @@ export default class Parser {
 
   _getIndentLevel(text) {
     let level = 0;
+    let inSpaces = false;
+    let spaceCount = 0;
     for (let i = 0; i < text.length; i += 1) {
-      if (text.charAt(i) === "\t") {
+      if (text.charAt(i) === "\t" && !inSpaces) {
         level += 1;
+      } else if (text.charAt(i) === " ") {
+        inSpaces = true;
+        spaceCount += 1;
+        if (spaceCount === 4) {
+          level += 1;
+          inSpaces = false;
+          spaceCount = 0;
+        }
       } else {
         break;
       }
     }
     return level;
+  }
+
+  _trim(text) {
+    let result = "";
+    for (let i = 0; i < text.length; i += 1) {
+      if (text.charAt(i) !== "\t" && text.charAt(i) !== " ") {
+        result += text.charAt(i);
+      }
+    }
+    return result;
   }
 
 }

@@ -37,9 +37,12 @@ class Newtab {
   initializeAceEditor() {
     let editor = ace.edit("source");
     editor.setFontSize(13);
+    editor.setDisplayIndentGuides(true);
+    editor.getSession().setTabSize(4);
     editor.getSession().setUseSoftTabs(false);
     editor.getSession().setUseWrapMode(false);
     editor.setShowPrintMargin(false);
+    editor.setHighlightActiveLine(true);
     editor.renderer.setShowGutter(false);
     editor.$blockScrolling = Infinity;
     return editor;
