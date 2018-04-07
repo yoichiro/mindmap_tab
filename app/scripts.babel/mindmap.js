@@ -19,9 +19,9 @@ export default class MindMap {
     $.jCanvas.defaults.fromCenter = false;
     $.jCanvas.defaults.layer = true;
     this.canvasDom_ = document.querySelector(targetElementId);
+    this._setupCanvasMoving();
     this.canvas_ = $(this.canvasDom_);
     this._initializeCanvas();
-    this._setupCanvasMoving();
   }
 
   // Public functions
@@ -147,6 +147,24 @@ export default class MindMap {
       this.canvasDom_.style.cursor = "default";
     });
     this.canvasDom_.addEventListener("mouseleave", () => {
+      dragging = false;
+      this.canvasDom_.style.cursor = "default";
+    });
+    this.canvasDom_.addEventListener("touchstart", e => {
+      x = e.changedTouches[0].pageX;
+      y = e.changedTouches[0].pageY;
+      sx = this.canvasDom_.parentNode.scrollLeft;
+      sy = this.canvasDom_.parentNode.scrollTop;
+      dragging = true;
+      this.canvasDom_.style.cursor = "move";
+    });
+    this.canvasDom_.addEventListener("touchmove", e => {
+      if (dragging) {
+        this.canvasDom_.parentNode.scrollLeft = sx - (e.changedTouches[0].pageX - x);
+        this.canvasDom_.parentNode.scrollTop = sy - (e.changedTouches[0].pageY - y);
+      }
+    });
+    this.canvasDom_.addEventListener("touchend", () => {
       dragging = false;
       this.canvasDom_.style.cursor = "default";
     });
