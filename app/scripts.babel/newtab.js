@@ -67,6 +67,7 @@ class Newtab {
      "btnEditBold", "btnEditStrikeThrough"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
+        this.hideNavbar();
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
       });
     });
@@ -75,6 +76,7 @@ class Newtab {
       let element = document.querySelector("#btnFontSize" + fontSize);
       element.addEventListener("click", ((fontSize) => {
         return () => {
+          this.hideNavbar();
           localStorage.fontSize = fontSize;
           this.drawMindmap();
         };
@@ -471,6 +473,7 @@ class Newtab {
         link.appendChild(date);
         link.addEventListener("click", (x => {
           return () => {
+            this.hideNavbar();
             this.load(x);
           };
         })(work));
@@ -485,6 +488,7 @@ class Newtab {
         lastA.setAttribute("class", "dropdown-item");
         lastA.innerText = "Last";
         lastA.addEventListener("click", () => {
+          this.hideNavbar();
           this.onBtnLastClicked();
         });
         history.appendChild(lastA);
@@ -495,6 +499,7 @@ class Newtab {
         topSitesA.setAttribute("class", "dropdown-item");
         topSitesA.innerText = "Top sites";
         topSitesA.addEventListener("click", () => {
+          this.hideNavbar();
           this.onBtnTopSitesClicked();
         });
         history.appendChild(topSitesA);
@@ -546,6 +551,10 @@ class Newtab {
       date.getMonth() + 1,
       date.getDate()
     ].join("/") + " " + date.toLocaleTimeString();
+  }
+
+  hideNavbar() {
+    $(".navbar-collapse").collapse("hide");
   }
 
 }
