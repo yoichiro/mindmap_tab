@@ -116,28 +116,28 @@ class Newtab {
   onBtnLayoutRightMainClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "d-block col-md-4");
-    rightColumn.setAttribute("class", "d-block col-md-8");
+    leftColumn.setAttribute("class", "d-block col-lg-4");
+    rightColumn.setAttribute("class", "d-block col-lg-8");
   }
 
   onBtnLayoutLeftMainClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "d-block col-md-8");
-    rightColumn.setAttribute("class", "d-block col-md-4");
+    leftColumn.setAttribute("class", "d-block col-lg-8");
+    rightColumn.setAttribute("class", "d-block col-lg-4");
   }
 
   onBtnLayoutRightOnlyClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
     leftColumn.setAttribute("class", "d-none");
-    rightColumn.setAttribute("class", "d-block col-md-12");
+    rightColumn.setAttribute("class", "d-block col-lg-12");
   }
 
   onBtnLayoutLeftOnlyClicked() {
     let leftColumn = document.querySelector("#leftColumn");
     let rightColumn = document.querySelector("#rightColumn");
-    leftColumn.setAttribute("class", "d-block col-md-12");
+    leftColumn.setAttribute("class", "d-block col-lg-12");
     rightColumn.setAttribute("class", "d-none");
   }
 
