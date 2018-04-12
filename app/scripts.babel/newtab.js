@@ -27,6 +27,7 @@ class Newtab {
           this.changeUseFirebase(alreadyLoggedIn);
           this.assignEventHandlers();
           this.loadWorkList();
+          this.changeLayoutVisibility();
         });
       });
     });
@@ -90,6 +91,40 @@ class Newtab {
     $("#createUserDialog").on("shown.bs.modal", () => {
       $("#inputNewEmail").focus();
     });
+
+    const visibilityDivs = {
+      "xs": $("<div class=\"d-xs-block d-sm-none d-md-none d-lg-none d-xl-none\"></div>"),
+      "sm": $("<div class=\"d-none d-sm-block d-md-none d-lg-none d-xl-none\"></div>"),
+      "md": $("<div class=\"d-none d-md-block d-sm-none d-lg-none d-xl-none\"></div>"),
+      "lg": $("<div class=\"d-none d-lg-block d-sm-none d-md-none d-xl-none\"></div>"),
+      "xl": $("<div class=\"d-none d-xl-block d-sm-none d-md-none d-lg-none\"></div>")
+    };
+
+    ResponsiveBootstrapToolkit.use("custom", visibilityDivs);
+
+    $(window).resize(ResponsiveBootstrapToolkit.changed(() => {
+      this.changeLayoutVisibility();
+    }));
+  }
+
+  changeLayoutVisibility() {
+    if (ResponsiveBootstrapToolkit.is("<=md")) {
+      $("#btnLayoutRightMain").hide();
+      $("#btnLayoutLeftMain").hide();
+      const leftColumn = document.querySelector("#leftColumn");
+      const rightColumn = document.querySelector("#rightColumn");
+      const leftClassName = leftColumn.getAttribute("class");
+      if (leftClassName.includes("-8") || leftClassName.includes("-12")) {
+        leftColumn.setAttribute("class", "d-block col-lg-12");
+        rightColumn.setAttribute("class", "d-none");
+      } else {
+        leftColumn.setAttribute("class", "d-none");
+        rightColumn.setAttribute("class", "d-block col-lg-12");
+      }
+    } else {
+      $("#btnLayoutRightMain").show();
+      $("#btnLayoutLeftMain").show();
+    }
   }
 
   onBtnEditBoldClicked() {

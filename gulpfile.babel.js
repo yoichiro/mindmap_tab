@@ -28,6 +28,7 @@ gulp.task("extras", () => {
     "app/bower_components/jcanvas/jcanvas.js",
     "app/bower_components/bootstrap/dist/js/bootstrap.min.js",
     "app/bower_components/bootstrap/dist/css/bootstrap.min.css",
+    "app/bower_components/responsive-bootstrap-toolkit/dist/bootstrap-toolkit.min.js",
     "app/libs/ace/*.js",
     "app/*.json",
     "app/*.html",
