@@ -65,7 +65,7 @@ class Newtab {
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
      "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
      "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnChangeLineColorMode",
-     "btnEditBold", "btnEditStrikeThrough"].forEach(name => {
+     "btnEditBold", "btnEditStrikeThrough", "btnChangeFilterStrikeThroughTextMode"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this.hideNavbar();
@@ -145,6 +145,12 @@ class Newtab {
 
   onBtnChangeLineColorModeClicked() {
     this.mm.changeLineColorMode();
+    this.drawMindmap();
+  }
+
+  onBtnChangeFilterStrikeThroughTextModeClicked() {
+    const filterStrikeThrough = JSON.parse(localStorage.filterStrikeThrough || "false");
+    localStorage.filterStrikeThrough = !filterStrikeThrough;
     this.drawMindmap();
   }
 
@@ -333,7 +339,7 @@ class Newtab {
 
   onBtnCopyAsMarkdownTextClicked() {
     let source = this.editor.getValue();
-    let root = new Parser().parse(source);
+    let root = new Parser().parse(source, this.isFilterStrikeThroughText());
     if (root) {
       let text = "";
       let traverse = (node, currentLevel) => {
@@ -354,7 +360,7 @@ class Newtab {
 
   onBtnCopyAsHtmlTextClicked() {
     let source = this.editor.getValue();
-    let root = new Parser().parse(source);
+    let root = new Parser().parse(source, this.isFilterStrikeThroughText());
     if (root) {
       let text = "<ul>\n";
       let traverse = (node, currentLevel) => {
@@ -479,7 +485,7 @@ class Newtab {
 
   drawMindmap(callback) {
     let source = this.editor.getValue();
-    let root = new Parser().parse(source);
+    let root = new Parser().parse(source, this.isFilterStrikeThroughText());
     if (root) {
       this.currentWork.content = source;
       this.mm.draw(root);
@@ -590,6 +596,10 @@ class Newtab {
 
   hideNavbar() {
     $(".navbar-collapse").collapse("hide");
+  }
+
+  isFilterStrikeThroughText() {
+    return JSON.parse(localStorage.filterStrikeThrough || "false");
   }
 
 }
