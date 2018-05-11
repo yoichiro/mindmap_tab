@@ -6,15 +6,16 @@ export default class Parser {
 
   // Public functions
 
-  parse(source) {
-    let lines = source.split(/\n/);
+  parse(source, filterStrikeThroughText) {
+    const lines = source.split(/\n/);
     let root = null;
     let prevNode = null;
     let prevLevel = -1;
     let position = 0;
     for (let i = 0; i < lines.length; i += 1) {
-      if (this._trim(lines[i])) {
-        let level = this._getIndentLevel(lines[i]);
+      const trimedLine = this._trim(lines[i]);
+      if (trimedLine && this._canShowText(filterStrikeThroughText, trimedLine)) {
+        const level = this._getIndentLevel(lines[i]);
         if (i === 0) {
           if (level === 0) {
             root = Node.root(lines[i]);
@@ -26,7 +27,7 @@ export default class Parser {
           }
         } else {
           if (prevLevel === level) {
-            let parentNode = prevNode.parent;
+            const parentNode = prevNode.parent;
             if (parentNode) {
               let node = null;
               parentNode.add(lines[i], position + level, x => {
@@ -62,8 +63,8 @@ export default class Parser {
             prevLevel = level;
             prevNode = node;
           } else {
-            console.log("Invalid indent.");
-            return null;
+            console.log("Invalid indent.", i, lines[i]);
+            // return null;
           }
         }
       }
@@ -73,6 +74,14 @@ export default class Parser {
   }
 
   // Private functions
+
+  _canShowText(filterStrikeThroughText, line) {
+    if (filterStrikeThroughText) {
+      return !/^\~\~[^~]+\~\~$/.test(line);
+    } else {
+      return true;
+    }
+  }
 
   _getIndentLevel(text) {
     let level = 0;
