@@ -231,8 +231,12 @@ export default class MindMap {
       text: text,
       name: name + "-text",
       click: (url => {
-        return () => {
-          location.href = url;
+        return (layout) => {
+          if (layout.event.shiftKey) {
+            window.open(url);
+          } else {
+            location.href = url;
+          }
         };
       })(url),
       cursors: {
