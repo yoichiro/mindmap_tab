@@ -15,8 +15,7 @@
     "chrome": true,
     "firebase": true,
     "ace": true,
-    "ResponsiveBootstrapToolkit": true,
-    "caches": true
+    "ResponsiveBootstrapToolkit": true
   },
   "rules": {
     "block-scoped-var": 2,

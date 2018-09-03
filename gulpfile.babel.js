@@ -30,7 +30,6 @@ gulp.task("extras", () => {
     "app/bower_components/bootstrap/dist/css/bootstrap.min.css",
     "app/bower_components/responsive-bootstrap-toolkit/dist/bootstrap-toolkit.min.js",
     "app/libs/ace/*.js",
-    "app/libs/firebase/*.js",
     "app/*.json",
     "app/*.html",
     "app/styles/*.css",
