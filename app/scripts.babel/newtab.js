@@ -59,7 +59,7 @@ class Newtab {
       this.onEditorSelectionChanged();
     });
 
-    ["btnDelete", "btnNew", "btnConfirmYes",
+    ["btnDelete", "btnConfirmYes",
      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
@@ -501,6 +501,20 @@ class Newtab {
     this.getWorkStorage().getAll(works => {
       let history = document.querySelector("#history");
       history.innerHTML = "";
+      const newLink = document.createElement("a");
+      newLink.href = "#";
+      newLink.setAttribute("class", "dropdown-item");
+      newLink.appendChild(document.createTextNode("New"));
+      newLink.addEventListener("click", () => {
+        this.hideNavbar();
+        this.onBtnNewClicked();
+      });
+      history.appendChild(newLink);
+      if (works.length > 0) {
+        const separator = document.createElement("div");
+        separator.setAttribute("class", "dropdown-divider");
+        history.appendChild(separator);
+      }
       works.forEach(work => {
         const link = document.createElement("a");
         link.href = "#";
