@@ -15,6 +15,8 @@ class Newtab {
     this.loading = false;
     this.timer = false;
 
+    this.showStatusMessage("Initialization starting.");
+
     this.chromeWorkStorage = new ChromeWorkStorage(this);
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
     this.localWorkStorage = new LocalWorkStorage(this);
@@ -28,6 +30,7 @@ class Newtab {
           this.assignEventHandlers();
           this.loadWorkList();
           this.changeLayoutVisibility();
+          this.showStatusMessage("Initialized.");
         });
       });
     });
@@ -36,6 +39,8 @@ class Newtab {
   // Ace Editor
 
   initializeAceEditor() {
+    this.showStatusMessage("Initializing Ace Editor.");
+
     let editor = ace.edit("source");
     editor.setFontSize(13);
     editor.setDisplayIndentGuides(true);
@@ -46,12 +51,17 @@ class Newtab {
     editor.setHighlightActiveLine(true);
     editor.renderer.setShowGutter(false);
     editor.$blockScrolling = Infinity;
+
+    this.showStatusMessage("Initialized Ace Editor.");
+
     return editor;
   }
 
   // Event Handlers
 
   assignEventHandlers() {
+    this.showStatusMessage("Assigning event handlers.");
+
     this.editor.getSession().on("change", () => {
       this.onEditorSessionChanged();
     });
@@ -70,6 +80,15 @@ class Newtab {
       element.addEventListener("click", () => {
         this.hideNavbar();
         this["on" + name.charAt(0).toUpperCase() + name.slice(1) + "Clicked"]();
+      });
+    });
+
+    ["footerBtnLayoutRightMain", "footerBtnLayoutLeftMain", "footerBtnLayoutRightOnly",
+      "footerBtnLayoutLeftOnly"].forEach(name => {
+      let element = document.querySelector("#" + name);
+      element.addEventListener("click", () => {
+        this.hideNavbar();
+        this["on" + name.charAt(6).toUpperCase() + name.slice(7) + "Clicked"]();
       });
     });
 
@@ -105,12 +124,16 @@ class Newtab {
     $(window).resize(ResponsiveBootstrapToolkit.changed(() => {
       this.changeLayoutVisibility();
     }));
+
+    this.showStatusMessage("Assigned event handlers.");
   }
 
   changeLayoutVisibility() {
     if (ResponsiveBootstrapToolkit.is("<=md")) {
       $("#btnLayoutRightMain").hide();
       $("#btnLayoutLeftMain").hide();
+      $("#footerBtnLayoutRightMain").hide();
+      $("#footerBtnLayoutLeftMain").hide();
       const leftColumn = document.querySelector("#leftColumn");
       const rightColumn = document.querySelector("#rightColumn");
       const leftClassName = leftColumn.getAttribute("class");
@@ -124,6 +147,8 @@ class Newtab {
     } else {
       $("#btnLayoutRightMain").show();
       $("#btnLayoutLeftMain").show();
+      $("#footerBtnLayoutRightMain").show();
+      $("#footerBtnLayoutLeftMain").show();
     }
   }
 
@@ -187,12 +212,17 @@ class Newtab {
       clearTimeout(this.timer);
     }
     this.timer = setTimeout(() => {
+      this.showStatusMessage("Editor session changed.");
       this.typing = true;
       this.drawMindmap(() => {
         if (!this.loading) {
+          this.showStatusMessage("Saving the content.");
           this.getWorkStorage().save(this.currentWork, () => {
-            this.loadWorkList();
-            this.timer = false;
+            this.showStatusMessage("Saved the content.");
+            this.loadWorkList(() => {
+              this.timer = false;
+              this.showStatusMessage("Saved and reloaded.");
+            });
           });
         }
       });
@@ -212,6 +242,7 @@ class Newtab {
   onBtnLastClicked() {
     this.getWorkStorage().getLast(work => {
       this.load(work);
+      this.showStatusMessage("Last mindmap loaded.");
     });
   }
 
@@ -226,15 +257,22 @@ class Newtab {
   onBtnConfirmYesClicked() {
     $("#confirmDialog").modal("hide");
     if (this.currentWork.content) {
+      this.showStatusMessage("Removing.");
+
       this.getWorkStorage().remove(this.currentWork, () => {
-        this.loadWorkList();
-        this.load(Work.newInstance());
+        this.loadWorkList(() => {
+          this.load(Work.newInstance());
+
+          this.showStatusMessage("Removed and reloaded.");
+        });
       });
     }
   }
 
   onBtnNewClicked() {
     this.load(Work.newInstance());
+
+    this.showStatusMessage("New mindmap created.");
   }
 
   onBtnTopSitesClicked() {
@@ -246,6 +284,8 @@ class Newtab {
       let work = new Work(Date.now(), text, Date.now());
       work.isSave = false;
       this.load(work);
+
+      this.showStatusMessage("Top sites loaded.");
     });
   }
 
@@ -280,9 +320,10 @@ class Newtab {
     if (password1 && password1 === password2) {
       this.firebaseWorkStorage.createUser(email, password1, () => {
         this.changeUseFirebase(true);
-        this.loadWorkList();
-        this.load(Work.newInstance());
-        $("#createUserDialog").modal("hide");
+        this.loadWorkList(() => {
+          this.load(Work.newInstance());
+          $("#createUserDialog").modal("hide");
+        });
       }, error => {
         console.error(error);
         this.updateCreateUserErrorMessage(error.message);
@@ -303,10 +344,15 @@ class Newtab {
 
   onBtnOnlineClicked() {
     if (this.useFirebase) {
+      this.showStatusMessage("Logging out.");
+
       this.getWorkStorage().logout(() => {
         this.changeUseFirebase(false);
-        this.loadWorkList();
-        this.load(Work.newInstance());
+        this.loadWorkList(() => {
+          this.load(Work.newInstance());
+
+          this.showStatusMessage("Logged out and reloaded.");
+        });
       });
     } else {
       document.querySelector("#inputPassword").value = "";
@@ -319,11 +365,17 @@ class Newtab {
     this.updateLoginErrorMessage("");
     const email = document.querySelector("#inputEmail").value;
     const passwd = document.querySelector("#inputPassword").value;
+
+    this.showStatusMessage("Logging in.");
+
     this.firebaseWorkStorage.login(email, passwd, () => {
       this.changeUseFirebase(true);
-      this.loadWorkList();
-      this.load(Work.newInstance());
-      $("#loginDialog").modal("hide");
+      this.loadWorkList(() => {
+        this.load(Work.newInstance());
+        $("#loginDialog").modal("hide");
+
+        this.showStatusMessage("Logged in.");
+      });
     }, error => {
       console.error(error);
       this.updateLoginErrorMessage(error.message);
@@ -433,28 +485,40 @@ class Newtab {
   }
 
   onWorkAdded() {
-    this.loadWorkList();
-    this.typing = false;
+    this.showStatusMessage("Mindmap added message received.");
+    this.loadWorkList(() => {
+      this.typing = false;
+
+      this.showStatusMessage("Handled mindmap added message and reloaded.");
+    });
   }
 
   onWorkChanged(key, changedWork) {
-    this.loadWorkList();
-    if (!this.typing
-      && this.currentWork
-      && this.currentWork.created === changedWork.created
-      && this.currentWork.content !== changedWork.content) {
-      this.load(changedWork);
-    }
-    this.typing = false;
+    this.showStatusMessage("Mindmap changed message received.");
+    this.loadWorkList(() => {
+      if (!this.typing
+        && this.currentWork
+        && this.currentWork.created === changedWork.created
+        && this.currentWork.content !== changedWork.content) {
+        this.load(changedWork);
+      }
+      this.typing = false;
+
+      this.showStatusMessage("Handled mindmap changed message and reloaded.");
+    });
   }
 
   onWorkRemoved(key, removedWork) {
-    this.loadWorkList();
-    if (this.currentWork
-      && this.currentWork.created === removedWork.created) {
-      this.load(Work.newInstance());
-    }
-    this.typing = false;
+    this.showStatusMessage("Mindmap removed message received.");
+    this.loadWorkList(() => {
+      if (this.currentWork
+        && this.currentWork.created === removedWork.created) {
+        this.load(Work.newInstance());
+      }
+      this.typing = false;
+
+      this.showStatusMessage("Handled mindmap removed message and reloaded.");
+    });
   }
 
   updateBtnOnlineText() {
@@ -497,7 +561,9 @@ class Newtab {
     }
   }
 
-  loadWorkList() {
+  loadWorkList(callback) {
+    this.showStatusMessage("Loading mindmaps.");
+
     this.getWorkStorage().getAll(works => {
       let history = document.querySelector("#history");
       history.innerHTML = "";
@@ -566,6 +632,12 @@ class Newtab {
           history.appendChild(h6);
         }
       }
+
+      this.showStatusMessage("Loaded mindmaps.");
+
+      if (callback) {
+        callback();
+      }
     });
   }
 
@@ -596,6 +668,13 @@ class Newtab {
     }
     this.editor.gotoLine(row, position - charCount, false);
     this.editor.focus();
+  }
+
+  // Status bar
+
+  showStatusMessage(message) {
+    const statusBar = document.querySelector("#statusMessage");
+    statusBar.innerHTML = message;
   }
 
   // Utilities
