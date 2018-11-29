@@ -47,37 +47,29 @@
             <a class="dropdown-item" href="#" id="btnCopyAsPlainText">Copy as Plain Text</a>
             <a class="dropdown-item" href="#" id="btnCopyAsMarkdownText">Copy as Markdown Text</a>
             <a class="dropdown-item" href="#" id="btnCopyAsHtmlText">Copy as HTML</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" id="navbarExport" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Export
-          </a>
-          <div class="dropdown-menu" id="export" aria-labelledby="navbarExport">
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" id="btnExportAsPng">Export as PNG</a>
             <a class="dropdown-item" href="#" id="btnExportAsJpeg">Export as JPEG</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" id="btnDelete">Delete</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="btnNew">
-            New
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="btnDelete">
-            Delete
-          </a>
-        </li>
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" id="navbarConfiguration" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Design
+          <a href="#" class="nav-link dropdown-toggle" id="navbarLayout" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Layout
           </a>
-          <div class="dropdown-menu" id="layout" aria-labelledby="navbarConfiguration">
-            <h6 class="dropdown-header">Layout</h6>
+          <div class="dropdown-menu" id="layout" aria-labelledby="navbarLayout">
             <a class="dropdown-item" href="#" id="btnLayoutRightMain">Focus on MindMap</a>
             <a class="dropdown-item" href="#" id="btnLayoutLeftMain">Focus on Text</a>
             <a class="dropdown-item" href="#" id="btnLayoutRightOnly">MindMap only</a>
             <a class="dropdown-item" href="#" id="btnLayoutLeftOnly">Text only</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarConfiguration" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Style
+          </a>
+          <div class="dropdown-menu" id="configuration" aria-labelledby="navbarConfiguration">
             <h6 class="dropdown-header">Color mode</h6>
             <a class="dropdown-item" href="#" id="btnChangeLineColorMode">Change Line Color Mode</a>
             <h6 class="dropdown-header">Filter mode</h6>
@@ -92,10 +84,15 @@
             <a class="dropdown-item" href="#" id="btnFontSize36">36 pixels</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="btnOnline">
-            <span id="lblOnline"></span>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="navbarSession" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Session
           </a>
+          <div class="dropdown-menu" id="session" aria-labelledby="navbarSession">
+            <a class="dropdown-item" href="#" id="btnOnline">
+              <span id="lblOnline"></span>
+            </a>
+          </div>
         </li>
       </ul>
     </div>
@@ -110,6 +107,18 @@
         <div class="canvas-container">
           <canvas id="target" width="50" height="50"></canvas>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer">
+    <div class="statusBar">
+      <div class="float-left" id="statusMessage"></div>
+      <div class="float-right footerButtons">
+        <img id="footerBtnLayoutRightMain" src="images/focus_mindmap.gif" title="Focus on MindMap" />
+        <img id="footerBtnLayoutLeftMain" src="images/focus_text.gif" title="Focus on Text" />
+        <img id="footerBtnLayoutRightOnly" src="images/mindmap.gif" title="MindMap only" />
+        <img id="footerBtnLayoutLeftOnly" src="images/text.gif" title="Text only" />
       </div>
     </div>
   </div>
