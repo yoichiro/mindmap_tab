@@ -34,7 +34,8 @@ gulp.task("extras", () => {
     "app/*.html",
     "app/styles/*.css",
     "app/images/*.ico",
-    "app/images/*.png"
+    "app/images/*.png",
+    "app/images/*.gif"
   ], {
     base: "app",
     dot: true
