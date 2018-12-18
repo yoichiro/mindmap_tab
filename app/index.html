@@ -11,12 +11,15 @@
   <link rel="icon" type="image/png" href="images/favicon.ico" />
   <link rel="stylesheet" href="styles/newtab.css" />
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.min.css" />
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
   <script type="text/javascript" src="bower_components/jcanvas/jcanvas.js"></script>
   <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="bower_components/responsive-bootstrap-toolkit/dist/bootstrap-toolkit.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
-  <script src="libs/ace/ace.js"></script>
+  <script type="text/javascript" src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
+  <script type="text/javascript" src="libs/ace/ace.js"></script>
   <title>MindMap Tab</title>
 </head>
 <body>
@@ -63,6 +66,8 @@
             <a class="dropdown-item" href="#" id="btnLayoutLeftMain">Focus on Text</a>
             <a class="dropdown-item" href="#" id="btnLayoutRightOnly">MindMap only</a>
             <a class="dropdown-item" href="#" id="btnLayoutLeftOnly">Text only</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" id="btnCalendar">Calendar View</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -115,6 +120,7 @@
     <div class="statusBar">
       <div class="float-left" id="statusMessage"></div>
       <div class="float-right footerButtons">
+          <img id="footerBtnCalendar" src="images/calendar.gif" title="Calendar View" />
         <img id="footerBtnLayoutRightMain" src="images/focus_mindmap.gif" title="Focus on MindMap" />
         <img id="footerBtnLayoutLeftMain" src="images/focus_text.gif" title="Focus on Text" />
         <img id="footerBtnLayoutRightOnly" src="images/mindmap.gif" title="MindMap only" />
@@ -138,6 +144,22 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
           <button type="button" class="btn btn-danger" id="btnConfirmYes">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="calendarDialog" class="modal fade">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Calendar</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="calendar"></div>
         </div>
       </div>
     </div>
