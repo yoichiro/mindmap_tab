@@ -3,6 +3,7 @@
 import MindMap from "./mindmap.js";
 import Parser from "./parser.js";
 import Work from "./work.js";
+import Node from "./node.js";
 import ChromeWorkStorage from "./chrome_work_storage.js";
 import FirebaseWorkStorage from "./firebase_work_storage.js";
 import LocalWorkStorage from "./local_work_storage.js";
@@ -26,6 +27,7 @@ class Newtab {
           this.mm = new MindMap(this, "#target");
           this.currentWork = Work.newInstance();
           this.editor = this.initializeAceEditor();
+          this.calendar = this.initializeCalendar();
           this.changeUseFirebase(alreadyLoggedIn);
           this.assignEventHandlers();
           this.loadWorkList();
@@ -57,6 +59,20 @@ class Newtab {
     return editor;
   }
 
+  // Calendar
+
+  initializeCalendar() {
+    return $("#calendar").fullCalendar({
+      defaultView: "month",
+      displayEventTime: false,
+      eventTextColor: "white",
+      eventBackgroundColor: "#2196F3",
+      eventRender: (event, element) => {
+        element.attr("title", event.title);
+      }
+    }).fullCalendar("getCalendar");
+  }
+
   // Event Handlers
 
   assignEventHandlers() {
@@ -69,7 +85,7 @@ class Newtab {
       this.onEditorSelectionChanged();
     });
 
-    ["btnDelete", "btnConfirmYes",
+    ["btnDelete", "btnConfirmYes", "btnCalendar",
      "btnCopyAsPlainText", "btnCopyAsMarkdownText", "btnOnline",
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
@@ -84,7 +100,7 @@ class Newtab {
     });
 
     ["footerBtnLayoutRightMain", "footerBtnLayoutLeftMain", "footerBtnLayoutRightOnly",
-      "footerBtnLayoutLeftOnly"].forEach(name => {
+      "footerBtnLayoutLeftOnly", "footerBtnCalendar"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this.hideNavbar();
@@ -445,6 +461,46 @@ class Newtab {
       text += "</ul>"
       this.copyTextToClipboardViaCopyBuffer(text);
     }
+  }
+
+  onBtnCalendarClicked() {
+    this.renderEvents();
+    $("#calendarDialog").modal("show");
+  }
+
+  // Calendar
+
+  renderEvents() {
+    const source = this.editor.getValue();
+    const root = new Parser().parse(source, this.isFilterStrikeThroughText());
+    const eventSource = [];
+    if (root) {
+      Node.visit(root, node => {
+        const m = node.source.match(/(\d{4}\/)?\d{1,2}\/\d{1,2}/);
+        if (m) {
+          let date = m[0];
+          if (date.split("/").length - 1 === 1) {
+            date = `${new Date().getFullYear()}/${date}`;
+          }
+          eventSource.push({
+            title: this.createEventTitle(node),
+            start: new Date(`${date} 00:00:00`)
+          })
+        }
+      });
+    }
+    this.calendar.removeEventSources();
+    this.calendar.addEventSource(eventSource);
+  }
+
+  createEventTitle(node) {
+    let target = node;
+    let result = [];
+    do {
+      result.push(target.source.replace(/~/g, "").replace(/\*/g, ""));
+      target = target.parent;
+    } while(target !== null && target.parent !== null);
+    return result.reverse().join(" ");
   }
 
   // Update messages

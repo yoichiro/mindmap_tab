@@ -7,7 +7,8 @@
     "bootstrap": "^4.0.0",
     "commonjs": "^0.2.0",
     "react": "^15.0.1",
-    "responsive-bootstrap-toolkit": "responsive-toolkit#^2.6.3"
+    "responsive-bootstrap-toolkit": "responsive-toolkit#^2.6.3",
+    "fullcalendar": "^3.9.0"
   },
   "devDependencies": {
     "chai": "~3.5.0",

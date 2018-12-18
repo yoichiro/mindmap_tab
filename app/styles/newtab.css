@@ -109,3 +109,11 @@ nav {
   font-size: 0.7rem;
   color: gray;
 }
+
+#calendar h2 {
+  font-size: 1.15rem;
+}
+
+#calendar button {
+  font-size: 0.8rem;
+}
