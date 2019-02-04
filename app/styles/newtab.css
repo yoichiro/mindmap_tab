@@ -25,6 +25,10 @@ div.main div.row>div {
   height: 100%;
 }
 
+nav {
+  max-height: 56px;
+}
+
 div.footer {
   position: absolute;
   bottom: 5px;
@@ -47,6 +51,15 @@ div.statusBar {
 
 div.footerButtons img {
   cursor: pointer;
+}
+
+#statusMessage {
+  left: 10px;
+  right: 100px;
+  position: absolute;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 div.canvas-container {
