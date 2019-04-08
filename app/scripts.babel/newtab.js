@@ -16,7 +16,7 @@ class Newtab {
     this.loading = false;
     this.timer = false;
 
-    this.showStatusMessage("Initialization starting.");
+    this.showStatusMessage("Initialiing...");
 
     this.chromeWorkStorage = new ChromeWorkStorage(this);
     this.firebaseWorkStorage = new FirebaseWorkStorage(this);
@@ -29,6 +29,7 @@ class Newtab {
           this.editor = this.initializeAceEditor();
           this.calendar = this.initializeCalendar();
           this.changeUseFirebase(alreadyLoggedIn);
+          this.setConfigrationToUI();
           this.assignEventHandlers();
           this.loadWorkList();
           this.changeLayoutVisibility();
@@ -44,7 +45,11 @@ class Newtab {
     this.showStatusMessage("Initializing Ace Editor.");
 
     let editor = ace.edit("source");
-    editor.setFontSize(13);
+    // editor.setFontSize(13);
+    editor.setOptions({
+      fontFamily: "MeiryoKe_Gothic, \"Courier New\", Courier, Monaco, Mento, monospace",
+      fontSize: "14px"
+    });
     editor.setDisplayIndentGuides(true);
     editor.getSession().setTabSize(4);
     editor.getSession().setUseSoftTabs(false);
@@ -90,8 +95,9 @@ class Newtab {
      "btnLogin", "btnOpenCreateUserDialog", "btnCreateUser",
      "btnForgotPassword", "btnExportAsPng", "btnExportAsJpeg",
      "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
-     "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnChangeLineColorMode",
-     "btnEditBold", "btnEditStrikeThrough", "btnChangeFilterStrikeThroughTextMode"].forEach(name => {
+     "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnLineColorModeOn",
+     "btnLineColorModeOff", "btnEditBold", "btnEditStrikeThrough",
+     "btnFilterStrikeThroughTextModeOn", "btnFilterStrikeThroughTextModeOff"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this.hideNavbar();
@@ -184,14 +190,23 @@ class Newtab {
     }
   }
 
-  onBtnChangeLineColorModeClicked() {
-    this.mm.changeLineColorMode();
+  onBtnLineColorModeOnClicked() {
+    this.mm.changeLineColorMode(true);
     this.drawMindmap();
   }
 
-  onBtnChangeFilterStrikeThroughTextModeClicked() {
-    const filterStrikeThrough = JSON.parse(localStorage.filterStrikeThrough || "false");
-    localStorage.filterStrikeThrough = !filterStrikeThrough;
+  onBtnLineColorModeOffClicked() {
+    this.mm.changeLineColorMode(false);
+    this.drawMindmap();
+  }
+
+  onBtnFilterStrikeThroughTextModeOnClicked() {
+    localStorage.filterStrikeThrough = false;
+    this.drawMindmap();
+  }
+
+  onBtnFilterStrikeThroughTextModeOffClicked() {
+    localStorage.filterStrikeThrough = true;
     this.drawMindmap();
   }
 
@@ -749,6 +764,17 @@ class Newtab {
 
   isFilterStrikeThroughText() {
     return JSON.parse(localStorage.filterStrikeThrough || "false");
+  }
+
+  setConfigrationToUI() {
+    const filterStrikeThrough = this.isFilterStrikeThroughText();
+    document.querySelector("#btnFilterStrikeThroughTextModeOn").checked = !filterStrikeThrough;
+    document.querySelector("#btnFilterStrikeThroughTextModeOff").checked = filterStrikeThrough;
+    const lineColorMode = JSON.parse(localStorage.lineColorMode || "false");
+    document.querySelector("#btnLineColorModeOn").checked = lineColorMode;
+    document.querySelector("#btnLineColorModeOff").checked = !lineColorMode;
+    const fontSize = Number(localStorage.fontSize || "14"); // Defined at mindmap.js
+    document.querySelector(`#btnFontSize${fontSize}`).checked = true;
   }
 
 }

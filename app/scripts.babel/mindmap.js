@@ -82,9 +82,8 @@ export default class MindMap {
     }, "image/" + format);
   }
 
-  changeLineColorMode() {
-    const lineColorMode = JSON.parse(localStorage.lineColorMode || "false");
-    localStorage.lineColorMode = !lineColorMode;
+  changeLineColorMode(state) {
+    localStorage.lineColorMode = state;
   }
 
   // Private functions
