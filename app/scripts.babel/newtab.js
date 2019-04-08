@@ -97,7 +97,8 @@ class Newtab {
      "btnLayoutRightMain", "btnLayoutLeftMain", "btnLayoutRightOnly",
      "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnLineColorModeOn",
      "btnLineColorModeOff", "btnEditBold", "btnEditStrikeThrough",
-     "btnFilterStrikeThroughTextModeOn", "btnFilterStrikeThroughTextModeOff"].forEach(name => {
+     "btnFilterStrikeThroughTextModeOn", "btnFilterStrikeThroughTextModeOff",
+     "btnWingModeBoth", "btnWingModeLeftOnly", "btnWingModeRightOnly"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this.hideNavbar();
@@ -483,6 +484,21 @@ class Newtab {
     $("#calendarDialog").modal("show");
   }
 
+  onBtnWingModeBothClicked() {
+    localStorage.wingMode = "both";
+    this.drawMindmap();
+  }
+
+  onBtnWingModeLeftOnlyClicked() {
+    localStorage.wingMode = "left";
+    this.drawMindmap();
+  }
+
+  onBtnWingModeRightOnlyClicked() {
+    localStorage.wingMode = "right";
+    this.drawMindmap();
+  }
+
   // Calendar
 
   renderEvents() {
@@ -775,6 +791,14 @@ class Newtab {
     document.querySelector("#btnLineColorModeOff").checked = !lineColorMode;
     const fontSize = Number(localStorage.fontSize || "14"); // Defined at mindmap.js
     document.querySelector(`#btnFontSize${fontSize}`).checked = true;
+    const wingMode = localStorage.wingMode || "both";
+    if (wingMode === "both") {
+      document.querySelector("#btnWingModeBoth").checked = true;
+    } else if (wingMode === "left") {
+      document.querySelector("#btnWingModeLeftOnly").checked = true;
+    } else {
+      document.querySelector("#btnWingModeRightOnly").checked = true;
+    }
   }
 
 }

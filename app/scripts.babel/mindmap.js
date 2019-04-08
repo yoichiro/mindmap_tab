@@ -393,10 +393,17 @@ export default class MindMap {
   }
 
   _divideBalancedNodes(root) {
-    let divideIndex = this._getDivideIndex(root);
-    let left = root.children.slice(0, divideIndex + 1);
-    let right = root.children.slice(divideIndex + 1);
-    return [left, right];
+    const wingMode = localStorage.wingMode || "both";
+    if (wingMode === "both") {
+      let divideIndex = this._getDivideIndex(root);
+      let left = root.children.slice(0, divideIndex + 1);
+      let right = root.children.slice(divideIndex + 1);
+      return [left, right];
+    } else if (wingMode === "right") {
+      return [[], root.children];
+    } else {
+      return [root.children, []];
+    }
   }
 
   _getAllTextLength(nodes) {
