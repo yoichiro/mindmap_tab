@@ -75,18 +75,79 @@
             Style
           </a>
           <div class="dropdown-menu" id="configuration" aria-labelledby="navbarConfiguration">
-            <h6 class="dropdown-header">Color mode</h6>
-            <a class="dropdown-item" href="#" id="btnChangeLineColorMode">Change Line Color Mode</a>
-            <h6 class="dropdown-header">Filter mode</h6>
-            <a class="dropdown-item" href="#" id="btnChangeFilterStrikeThroughTextMode">Change Filter Strike Through Text Mode</a>
-            <h6 class="dropdown-header">Font size</h6>
-            <a class="dropdown-item" href="#" id="btnFontSize10">10 pixels</a>
-            <a class="dropdown-item" href="#" id="btnFontSize12">12 pixels</a>
-            <a class="dropdown-item" href="#" id="btnFontSize14">14 pixels</a>
-            <a class="dropdown-item" href="#" id="btnFontSize16">16 pixels</a>
-            <a class="dropdown-item" href="#" id="btnFontSize18">18 pixels</a>
-            <a class="dropdown-item" href="#" id="btnFontSize24">24 pixels</a>
-            <a class="dropdown-item" href="#" id="btnFontSize36">36 pixels</a>
+            <form class="px-4 py-3">
+              <div class="form-group">
+                <label>Line Color Mode</label><br />
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="lineColorMode" id="btnLineColorModeOn" value="on">
+                  <label class="form-check-label" for="btnLineColorModeOn">On</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="lineColorMode" id="btnLineColorModeOff" value="off">
+                  <label class="form-check-label" for="btnLineColorModeOff">Off</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Filter Strike Through Text Mode</label><br />
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="filterModel" id="btnFilterStrikeThroughTextModeOn" value="on">
+                  <label class="form-check-label" for="btnFilterStrikeThroughTextModeOn">Show</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="filterModel" id="btnFilterStrikeThroughTextModeOff" value="off">
+                  <label class="form-check-label" for="btnFilterStrikeThroughTextModeOff">Hide</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="fontSizeLabel">Font Size</label><br />
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize10" value="10">
+                  <label class="form-check-label" for="btnFontSize10">10</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize12" value="12">
+                  <label class="form-check-label" for="btnFontSize12">12</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize14" value="14">
+                  <label class="form-check-label" for="btnFontSize14">14</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize16" value="16">
+                  <label class="form-check-label" for="btnFontSize16">16</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize18" value="18">
+                  <label class="form-check-label" for="btnFontSize18">18</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize24" value="24">
+                  <label class="form-check-label" for="btnFontSize24">24</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="fontSize" id="btnFontSize36" value="36">
+                  <label class="form-check-label" for="btnFontSize36">36</label>
+                </div>
+              </div>
+
+              <div>
+                <label for="wingLabel">Mindmap Layout</label><br />
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="wingMode" id="btnWingModeBoth" value="both">
+                  <label class="form-check-label" for="btnWingModeBoth">Both</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="wingMode" id="btnWingModeLeftOnly" value="left">
+                  <label class="form-check-label" for="btnWingModeLeftOnly">Left Only</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="wingMode" id="btnWingModeRightOnly" value="right">
+                  <label class="form-check-label" for="btnWingModeRightOnly">Right Only</label>
+                </div>
+              </div>
+            </form>
           </div>
         </li>
         <li class="nav-item dropdown">
