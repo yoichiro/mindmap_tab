@@ -321,6 +321,16 @@ class Newtab {
     });
   }
 
+  onBtnHowToUseClicked() {
+    let text = "MindMap Tab\n\tAbout\n\t\tCopyright (C) 2017-${year} Yoichiro Tanaka\n\t\tAll rights reserved\n\t\t[GitHub](https://github.com/yoichiro/mindmap_tab)\n\t\t[Issue Tracker](https://github.com/yoichiro/mindmap_tab/issues)\n\t\t[Chrome WebStore](https://chrome.google.com/webstore/detail/mindmap-tab/mkgjficalhplaenklhejcbmlkonbakjj)\n\tHow to Use\n\t\tBasic\n\t\t\tHow to draw Mindmap diagram\n\t\t\t\tWrite an indented text\n\t\t\t\tEach line becomes a node\n\t\t\tHow to indent\n\t\t\t\tWith TAB characters\n\t\t\t\tWith 4 white space characters\n\t\tFormats\n\t\t\t[LINK TITLE](LINK URL)\n\t\t\t\tClick when you want to open\n\t\t\t\tShift+Click when you want to open with new window\n\t\t\t**BOLD**\n\t\t\t~~STRIKE THROUGH~~\n\t\t\t2019/04/24 EVENT\n\t\t\t\tYYYY/MM/DD ...\n\t\t\t\tShown on Calendar View\n";
+    text = text.replace("${year}", new Date().getFullYear());
+    const work = new Work(Date.now(), text, Date.now());
+    work.isSave = false;
+    this.load(work);
+
+    this.showStatusMessage("How to Use loaded.");
+  }
+
   onBtnExportAsPngClicked() {
     if (this.currentWork.hasContent()) {
       this.mm.saveAsImage(this.currentWork.firstLine, "png");
@@ -648,6 +658,12 @@ class Newtab {
     }
   }
 
+  appendDividerTo(parent) {
+    const separator = document.createElement("div");
+    separator.setAttribute("class", "dropdown-divider");
+    parent.appendChild(separator);
+}
+
   loadWorkList(callback) {
     this.showStatusMessage("Loading mindmaps.");
 
@@ -664,9 +680,7 @@ class Newtab {
       });
       history.appendChild(newLink);
       if (works.length > 0) {
-        const separator = document.createElement("div");
-        separator.setAttribute("class", "dropdown-divider");
-        history.appendChild(separator);
+        this.appendDividerTo(history);
       }
       works.forEach(work => {
         const link = document.createElement("a");
@@ -688,9 +702,7 @@ class Newtab {
         history.appendChild(link);
       });
       if (works.length > 0) {
-        const separator = document.createElement("div");
-        separator.setAttribute("class", "dropdown-divider");
-        history.appendChild(separator);
+        this.appendDividerTo(history);
         const lastA = document.createElement("a");
         lastA.href = "#";
         lastA.setAttribute("class", "dropdown-item");
@@ -705,20 +717,23 @@ class Newtab {
         const topSitesA = document.createElement("a");
         topSitesA.href = "#";
         topSitesA.setAttribute("class", "dropdown-item");
-        topSitesA.innerText = "Top sites";
+        topSitesA.innerText = "Top Sites";
         topSitesA.addEventListener("click", () => {
           this.hideNavbar();
           this.onBtnTopSitesClicked();
         });
         history.appendChild(topSitesA);
-      } else {
-        if (works.length === 0) {
-          const h6 = document.createElement("h6");
-          h6.setAttribute("class", "dropdown-header");
-          h6.appendChild(document.createTextNode("None"));
-          history.appendChild(h6);
-        }
       }
+      this.appendDividerTo(history);
+      const howToUseA = document.createElement("a");
+      howToUseA.href = "#";
+      howToUseA.setAttribute("class", "dropdown-item");
+      howToUseA.innerHTML = "How to Use";
+      howToUseA.addEventListener("click", () => {
+        this.hideNavbar();
+        this.onBtnHowToUseClicked();
+      });
+      history.appendChild(howToUseA);
 
       this.showStatusMessage("Loaded mindmaps.");
 
