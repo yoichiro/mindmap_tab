@@ -31,7 +31,20 @@ class Newtab {
           this.changeUseFirebase(alreadyLoggedIn);
           this.setConfigrationToUI();
           this.assignEventHandlers();
-          this.loadWorkList();
+          this.loadWorkList(works => {
+            const showLastMindmapMode = JSON.parse(localStorage.showLastMindmapMode || "false");
+            if (showLastMindmapMode) {
+              const lastMindmapId = localStorage.lastLoaded;
+              if (lastMindmapId) {
+                for (let work of works) {
+                  if (lastMindmapId == work.created) {
+                    this.load(work);
+                    break;
+                  }
+                }
+              }
+            }
+          });
           this.changeLayoutVisibility();
           this.showStatusMessage("Initialized.");
         });
@@ -98,7 +111,8 @@ class Newtab {
      "btnLayoutLeftOnly", "btnCopyAsHtmlText", "btnLineColorModeOn",
      "btnLineColorModeOff", "btnEditBold", "btnEditStrikeThrough",
      "btnFilterStrikeThroughTextModeOn", "btnFilterStrikeThroughTextModeOff",
-     "btnWingModeBoth", "btnWingModeLeftOnly", "btnWingModeRightOnly"].forEach(name => {
+     "btnWingModeBoth", "btnWingModeLeftOnly", "btnWingModeRightOnly",
+     "btnShowLastMindmapModeOn", "btnShowLastMindmapModeOff"].forEach(name => {
       let element = document.querySelector("#" + name);
       element.addEventListener("click", () => {
         this.hideNavbar();
@@ -199,6 +213,14 @@ class Newtab {
   onBtnLineColorModeOffClicked() {
     this.mm.changeLineColorMode(false);
     this.drawMindmap();
+  }
+
+  onBtnShowLastMindmapModeOnClicked() {
+    localStorage.showLastMindmapMode = true;
+  }
+
+  onBtnShowLastMindmapModeOffClicked() {
+    localStorage.showLastMindmapMode = false;
   }
 
   onBtnFilterStrikeThroughTextModeOnClicked() {
@@ -738,7 +760,7 @@ class Newtab {
       this.showStatusMessage("Loaded mindmaps.");
 
       if (callback) {
-        callback();
+        callback(works);
       }
     });
   }
@@ -752,6 +774,7 @@ class Newtab {
     this.drawMindmap();
     this.editor.focus();
     this.editor.gotoLine(cursorPosition.row + 1, cursorPosition.column, false);
+    localStorage.lastLoaded = work.created;
     this.loading = false;
   }
 
@@ -814,6 +837,9 @@ class Newtab {
     } else {
       document.querySelector("#btnWingModeRightOnly").checked = true;
     }
+    const showLastMindmapMode = JSON.parse(localStorage.showLastMindmapMode || "false");
+    document.querySelector("#btnShowLastMindmapModeOn").checked = showLastMindmapMode;
+    document.querySelector("#btnShowLastMindmapModeOff").checked = !showLastMindmapMode;
   }
 
 }
