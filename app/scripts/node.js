@@ -31,7 +31,7 @@ export default class Node {
 
   _parseStrikeThrough(token) {
     const source = token.text;
-    const re = /\~\~(.+?)\~\~/g;
+    const re = /~~(.+?)~~/g;
     let pos = 0;
     let rs = re.exec(source);
     const tempTokens = [];
