@@ -77,7 +77,7 @@ export default class Parser {
 
   _canShowText(filterStrikeThroughText, line) {
     if (filterStrikeThroughText) {
-      return !/^\~\~[^~]+\~\~$/.test(line);
+      return !/^~~[^~]+~~$/.test(line);
     } else {
       return true;
     }

@@ -1,0 +1,25 @@
+{
+  "extends": ["eslint:recommended"],
+  "plugins": [],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "globals": {
+    "chrome": false,
+    "$": false,
+    "firebase": false,
+    "ace": false,
+    "ResponsiveBootstrapToolkit": false
+  },
+  "rules": {
+    "no-console": "off",
+    "semi": "error",
+    "no-var": "error",
+    "no-unused-vars": ["error", {"argsIgnorePattern": "^_"}],
+    "quotes": ["error", "single"]
+  }
+}

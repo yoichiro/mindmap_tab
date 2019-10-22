@@ -3,9 +3,6 @@ temp
 .tmp
 dist
 .sass-cache
-app/bower_components
-test/bower_components
 package
-app/scripts
-.DS_Store
 app/service_worker*.js
+yarn-error.log
