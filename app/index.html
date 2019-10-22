@@ -72,7 +72,7 @@
         </li>
         <li class="nav-item dropdown">
           <a href="#" class="nav-link dropdown-toggle" id="navbarConfiguration" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Style
+            Settings
           </a>
           <div class="dropdown-menu" id="configuration" aria-labelledby="navbarConfiguration">
             <form class="px-4 py-3">
@@ -132,7 +132,7 @@
                 </div>
               </div>
 
-              <div>
+              <div class="form-group">
                 <label for="wingLabel">Mindmap Layout</label><br />
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="wingMode" id="btnWingModeBoth" value="both">
@@ -145,6 +145,18 @@
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="wingMode" id="btnWingModeRightOnly" value="right">
                   <label class="form-check-label" for="btnWingModeRightOnly">Right Only</label>
+                </div>
+              </div>
+
+              <div>
+                <label>Show last Mindmap at startup</label><br />
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="showLastMindmapMode" id="btnShowLastMindmapModeOn" value="on">
+                  <label class="form-check-label" for="btnShowLastMindmapModeOn">On</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="showLastMindmapMode" id="btnShowLastMindmapModeOff" value="off">
+                  <label class="form-check-label" for="btnShowLastMindmapModeOff">Off</label>
                 </div>
               </div>
             </form>
