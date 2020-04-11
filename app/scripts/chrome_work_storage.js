@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import Work from "./work.js";
+import Work from './work.js';
 
 export default class ChromeWorkStorage {
 
@@ -110,7 +110,7 @@ export default class ChromeWorkStorage {
   // Private functions
 
   _getAll(callback) {
-    chrome.storage.local.get("contentMap", item => {
+    chrome.storage.local.get('contentMap', item => {
       callback(item.contentMap || {});
     });
   }

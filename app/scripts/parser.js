@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import Node from "./node.js";
+import Node from './node.js';
 
 export default class Parser {
 
@@ -22,7 +22,7 @@ export default class Parser {
             prevNode = root;
             prevLevel = 0;
           } else {
-            console.log("Invalid first line.");
+            console.log('Invalid first line.');
             return null;
           }
         } else {
@@ -36,7 +36,7 @@ export default class Parser {
               prevLevel = level;
               prevNode = node;
             } else {
-              console.log("Parent is null.");
+              console.log('Parent is null.');
               return null;
             }
           } else if (level < prevLevel) {
@@ -52,7 +52,7 @@ export default class Parser {
               prevLevel = level;
               prevNode = node;
             } else {
-              console.log("Parent is null.");
+              console.log('Parent is null.');
               return null;
             }
           } else if (prevLevel === level - 1) {
@@ -63,7 +63,7 @@ export default class Parser {
             prevLevel = level;
             prevNode = node;
           } else {
-            console.log("Invalid indent.", i, lines[i]);
+            console.log('Invalid indent.', i, lines[i]);
             // return null;
           }
         }
@@ -88,9 +88,9 @@ export default class Parser {
     let inSpaces = false;
     let spaceCount = 0;
     for (let i = 0; i < text.length; i += 1) {
-      if (text.charAt(i) === "\t" && !inSpaces) {
+      if (text.charAt(i) === '\t' && !inSpaces) {
         level += 1;
-      } else if (text.charAt(i) === " ") {
+      } else if (text.charAt(i) === ' ') {
         inSpaces = true;
         spaceCount += 1;
         if (spaceCount === 4) {
@@ -106,9 +106,9 @@ export default class Parser {
   }
 
   _trim(text) {
-    let result = "";
+    let result = '';
     for (let i = 0; i < text.length; i += 1) {
-      if (text.charAt(i) !== "\t" && text.charAt(i) !== " ") {
+      if (text.charAt(i) !== '\t' && text.charAt(i) !== ' ') {
         result += text.charAt(i);
       }
     }

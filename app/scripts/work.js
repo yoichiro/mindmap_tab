@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export default class Work {
 
@@ -11,7 +11,7 @@ export default class Work {
 
   static newInstance() {
     let now = Date.now();
-    return new Work(now, "", now);
+    return new Work(now, '', now);
   }
 
   get firstLine() {
@@ -19,7 +19,7 @@ export default class Work {
     if (lines && lines.length > 0) {
       return lines[0];
     } else {
-      return "";
+      return '';
     }
   }
 

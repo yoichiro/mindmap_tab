@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import Work from "./work.js";
+import Work from './work.js';
 
 export default class FirebaseWorkStorage {
 
@@ -92,14 +92,14 @@ export default class FirebaseWorkStorage {
     if (user) {
       return user.email;
     } else {
-      return "";
+      return '';
     }
   }
 
   save(work, callback) {
     if (work.isSave && work.hasContent()) {
       const myRootRef = this._getMyRootRef();
-      myRootRef.once("value").then(snapshot => {
+      myRootRef.once('value').then(snapshot => {
         let contentMap = snapshot.val() || {};
         // TODO: Should check exists and updated
         work.updated = Date.now();
@@ -182,7 +182,7 @@ export default class FirebaseWorkStorage {
   // Private functions
 
   _getAll(callback) {
-    this._getMyRootRef().once("value")
+    this._getMyRootRef().once('value')
       .then(snapshot => {
         let contentMap = snapshot.val() || {};
         callback(contentMap);
@@ -192,26 +192,26 @@ export default class FirebaseWorkStorage {
   _getMyRootRef() {
     let user = firebase.auth().currentUser;
     let database = firebase.database();
-    let myRootRef = database.ref("mindmaps/private/" + user.uid);
+    let myRootRef = database.ref('mindmaps/private/' + user.uid);
     return myRootRef;
   }
 
   _initializeFirebase() {
     const config = {
-      apiKey: "AIzaSyCZDGsxx5VbFDwo9lRe2vDuWf4aS5-XmNc",
-      databaseURL: "https://mindmap-tab.firebaseio.com"
+      apiKey: 'AIzaSyCZDGsxx5VbFDwo9lRe2vDuWf4aS5-XmNc',
+      databaseURL: 'https://mindmap-tab.firebaseio.com'
     };
     firebase.initializeApp(config);
   }
 
   _startObservation() {
-    this._getMyRootRef().on("child_added", snapshot => {
+    this._getMyRootRef().on('child_added', snapshot => {
       this._newtab.onWorkAdded(snapshot.key, this._createWork(snapshot));
     });
-    this._getMyRootRef().on("child_changed", snapshot => {
+    this._getMyRootRef().on('child_changed', snapshot => {
       this._newtab.onWorkChanged(snapshot.key, this._createWork(snapshot));
     });
-    this._getMyRootRef().on("child_removed", snapshot => {
+    this._getMyRootRef().on('child_removed', snapshot => {
       this._newtab.onWorkRemoved(snapshot.key, this._createWork(snapshot));
     });
   }
