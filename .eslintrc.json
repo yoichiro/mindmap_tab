@@ -13,7 +13,8 @@
     "$": false,
     "firebase": false,
     "ace": false,
-    "ResponsiveBootstrapToolkit": false
+    "ResponsiveBootstrapToolkit": false,
+    "require": false
   },
   "rules": {
     "no-console": "off",

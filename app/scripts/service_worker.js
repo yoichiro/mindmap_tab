@@ -1,3 +1,3 @@
-"use strict";
+'use strict';
 
-self.addEventListener("fetch", () => {});
+self.addEventListener('fetch', () => {});

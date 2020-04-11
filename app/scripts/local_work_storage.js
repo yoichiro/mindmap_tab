@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import Work from "./work.js";
+import Work from './work.js';
 
 export default class LocalWorkStorage {
 
@@ -36,7 +36,7 @@ export default class LocalWorkStorage {
           content: work.content,
           updated: work.updated
         };
-        localStorage.setItem("contentMap", JSON.stringify(contentMap));
+        localStorage.setItem('contentMap', JSON.stringify(contentMap));
         if (callback) {
           callback();
         }
@@ -84,7 +84,7 @@ export default class LocalWorkStorage {
   }
 
   removeAll(callback) {
-    localStorage.removeItem("contentMap");
+    localStorage.removeItem('contentMap');
     if (callback) {
       callback();
     }
@@ -93,7 +93,7 @@ export default class LocalWorkStorage {
   remove(work, callback) {
     this._getAll(contentMap => {
       delete contentMap[work.created];
-      localStorage.setItem("contentMap", JSON.stringify(contentMap));
+      localStorage.setItem('contentMap', JSON.stringify(contentMap));
       if (callback) {
         callback();
       }
@@ -103,7 +103,7 @@ export default class LocalWorkStorage {
   // Private functions
 
   _getAll(callback) {
-    let contentMap = localStorage.getItem("contentMap");
+    let contentMap = localStorage.getItem('contentMap');
     callback(contentMap ? JSON.parse(contentMap) : {});
   }
 

@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 
-import Bounds from "./bounds.js";
-import Node from "./node.js";
+import Bounds from './bounds.js';
+import Node from './node.js';
 
 const DEFAULT_TEXT_FONT_SIZE = 14;
-const TEXT_FONT_FAMILY = "sans-serif";
+const TEXT_FONT_FAMILY = 'sans-serif';
 const NODE_MARGIN_WIDTH = 25;
 const NODE_MARGIN_HEIGHT = 15;
 const NODE_LINE_MARGIN = 5;
 const CENTER_NODE_MARGIN = 5;
-const LINE_COLORS = ["#0000AA", "#00AA00", "#00AAAA", "#AA0000", "#AA00AA", "#AAAA00"];
-const DEFAULT_LINE_COLOR = "gray";
+const LINE_COLORS = ['#0000AA', '#00AA00', '#00AAAA', '#AA0000', '#AA00AA', '#AAAA00'];
+const DEFAULT_LINE_COLOR = 'gray';
 
 export default class MindMap {
 
@@ -73,13 +73,13 @@ export default class MindMap {
 
   saveAsImage(title, format) {
     this.canvasDom_.toBlob(blob => {
-      const anchor = document.createElement("a");
+      const anchor = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
       anchor.href = url;
-      anchor.target = "_blank";
-      anchor.download = title + "." + format;
+      anchor.target = '_blank';
+      anchor.download = title + '.' + format;
       anchor.click();
-    }, "image/" + format);
+    }, 'image/' + format);
   }
 
   changeLineColorMode(state) {
@@ -93,8 +93,8 @@ export default class MindMap {
   }
 
   _adjustFontSize() {
-    this.canvasDom_.style.fontSize = this._getFontSize() + "px";
-    this.canvasDom_.getContext("2d").font = this._getFontSize() + "px " + TEXT_FONT_FAMILY;
+    this.canvasDom_.style.fontSize = this._getFontSize() + 'px';
+    this.canvasDom_.getContext('2d').font = this._getFontSize() + 'px ' + TEXT_FONT_FAMILY;
   }
 
   _getNodeHeight() {
@@ -117,7 +117,7 @@ export default class MindMap {
   }
 
   _getLineColor() {
-    const lineColorMode = JSON.parse(localStorage.lineColorMode || "false");
+    const lineColorMode = JSON.parse(localStorage.lineColorMode || 'false');
     if (lineColorMode) {
       return LINE_COLORS[this.lineColorIndex];
     } else {
@@ -127,45 +127,45 @@ export default class MindMap {
 
   _setupCanvasMoving() {
     let x, y, sx, sy, dragging;
-    this.canvasDom_.addEventListener("mousedown", e => {
+    this.canvasDom_.addEventListener('mousedown', e => {
       x = e.pageX;
       y = e.pageY;
       sx = this.canvasDom_.parentNode.scrollLeft;
       sy = this.canvasDom_.parentNode.scrollTop;
       dragging = true;
-      this.canvasDom_.style.cursor = "move";
+      this.canvasDom_.style.cursor = 'move';
     });
-    this.canvasDom_.addEventListener("mousemove", e => {
+    this.canvasDom_.addEventListener('mousemove', e => {
       if (dragging) {
         this.canvasDom_.parentNode.scrollLeft = sx - (e.pageX - x);
         this.canvasDom_.parentNode.scrollTop = sy - (e.pageY - y);
       }
     });
-    this.canvasDom_.addEventListener("mouseup", () => {
+    this.canvasDom_.addEventListener('mouseup', () => {
       dragging = false;
-      this.canvasDom_.style.cursor = "default";
+      this.canvasDom_.style.cursor = 'default';
     });
-    this.canvasDom_.addEventListener("mouseleave", () => {
+    this.canvasDom_.addEventListener('mouseleave', () => {
       dragging = false;
-      this.canvasDom_.style.cursor = "default";
+      this.canvasDom_.style.cursor = 'default';
     });
-    this.canvasDom_.addEventListener("touchstart", e => {
+    this.canvasDom_.addEventListener('touchstart', e => {
       x = e.changedTouches[0].pageX;
       y = e.changedTouches[0].pageY;
       sx = this.canvasDom_.parentNode.scrollLeft;
       sy = this.canvasDom_.parentNode.scrollTop;
       dragging = true;
-      this.canvasDom_.style.cursor = "move";
+      this.canvasDom_.style.cursor = 'move';
     });
-    this.canvasDom_.addEventListener("touchmove", e => {
+    this.canvasDom_.addEventListener('touchmove', e => {
       if (dragging) {
         this.canvasDom_.parentNode.scrollLeft = sx - (e.changedTouches[0].pageX - x);
         this.canvasDom_.parentNode.scrollTop = sy - (e.changedTouches[0].pageY - y);
       }
     });
-    this.canvasDom_.addEventListener("touchend", () => {
+    this.canvasDom_.addEventListener('touchend', () => {
       dragging = false;
-      this.canvasDom_.style.cursor = "default";
+      this.canvasDom_.style.cursor = 'default';
     });
   }
 
@@ -178,8 +178,8 @@ export default class MindMap {
   }
 
   _adjustCanvasSize(canvasSize) {
-    this.canvas_.attr("width", canvasSize.width);
-    this.canvas_.attr("height", canvasSize.height);
+    this.canvas_.attr('width', canvasSize.width);
+    this.canvas_.attr('height', canvasSize.height);
     this.canvas_.drawLayers();
   }
 
@@ -194,41 +194,41 @@ export default class MindMap {
   }
 
   _measureText(text) {
-    const context = this.canvasDom_.getContext("2d");
+    const context = this.canvasDom_.getContext('2d');
     return context.measureText(text).width;
   }
 
   _drawText(x, y, name, text, position, bold, strikeThrough) {
     this.canvas_.drawText({
-      fillStyle: strikeThrough ? "lightgray" : bold ? "red" : "black",
-      // strokeStyle: "black",
-      strokeWidth: "0",
+      fillStyle: strikeThrough ? 'lightgray' : bold ? 'red' : 'black',
+      // strokeStyle: 'black',
+      strokeWidth: '0',
       x: x,
       y: y,
       fontSize: this._getFontSize(),
       fontFamily: TEXT_FONT_FAMILY,
       text: text,
-      name: name + "-text",
+      name: name + '-text',
       click: (position => {
         return () => {
           this.newtab.jumpCaretTo(position);
         };
       })(position)
     });
-    return this.canvas_.getLayer(name + "-text");
+    return this.canvas_.getLayer(name + '-text');
   }
 
   _drawLink(x, y, name, text, url) {
     this.canvas_.drawText({
-      fillStyle: "blue",
-      // strokeStyle: "black",
-      strokeWidth: "0",
+      fillStyle: 'blue',
+      // strokeStyle: 'black',
+      strokeWidth: '0',
       x: x,
       y: y,
       fontSize: this._getFontSize(),
       fontFamily: TEXT_FONT_FAMILY,
       text: text,
-      name: name + "-text",
+      name: name + '-text',
       click: (url => {
         return (layout) => {
           if (layout.event.shiftKey) {
@@ -239,30 +239,30 @@ export default class MindMap {
         };
       })(url),
       cursors: {
-        mouseover: "pointer"
+        mouseover: 'pointer'
       }
     });
-    return this.canvas_.getLayer(name + "-text");
+    return this.canvas_.getLayer(name + '-text');
   }
 
   _initializeCanvas() {
-    let dummyTextLayer = this._drawText(0, 0, "dummy", "", 0, false, false);
+    let dummyTextLayer = this._drawText(0, 0, 'dummy', '', 0, false, false);
     this.canvas_.removeLayer(dummyTextLayer).drawLayers();
   }
 
   _drawRect(x, y, width, height, name) {
     this.canvas_.drawRect({
-      strokeStyle: "gray",
+      strokeStyle: 'gray',
       strokeWidth: 1,
       x: x,
       y: y,
       width: width,
       height: height,
       cornerRadius: 5,
-      name: name + "-rect",
+      name: name + '-rect',
       intangible: true
     });
-    return this.canvas_.getLayer(name + "-rect");
+    return this.canvas_.getLayer(name + '-rect');
   }
 
   _drawLine(x1, y1, x2, y2, name) {
@@ -271,9 +271,9 @@ export default class MindMap {
       strokeWidth: 1,
       x1: x1, y1: y1,
       x2: x2, y2: y2,
-      name: name + "-line"
+      name: name + '-line'
     });
-    return this.canvas_.getLayer(name + "-line");
+    return this.canvas_.getLayer(name + '-line');
   }
 
   _drawCenterNode(x, y, name, text, position) {
@@ -304,9 +304,9 @@ export default class MindMap {
     node.tokens.forEach((token, index) => {
       let layer;
       if (token.hasUrl()) {
-        layer = this._drawLink(cx, y, node.id + "-" + index, token.text, token.url);
+        layer = this._drawLink(cx, y, node.id + '-' + index, token.text, token.url);
       } else {
-        layer = this._drawText(cx, y, node.id + "-" + index, token.text, node.position, token.isBold(), token.isStrikeThrough());
+        layer = this._drawText(cx, y, node.id + '-' + index, token.text, node.position, token.isBold(), token.isStrikeThrough());
       }
       cx = cx + layer.width;
     });
@@ -329,7 +329,7 @@ export default class MindMap {
                               cx1: cx1, cy1: cy1,
                               cx2: cx2, cy2: cy2,
                               x2: x2, y2: y2,
-                              name: name + "-bezier"
+                              name: name + '-bezier'
                             });
   }
 
@@ -350,7 +350,7 @@ export default class MindMap {
                               cx1: cx1, cy1: cy1,
                               cx2: cx2, cy2: cy2,
                               x2: x2, y2: y2,
-                              name: name + "-bezier"
+                              name: name + '-bezier'
                             });
   }
 
@@ -393,13 +393,13 @@ export default class MindMap {
   }
 
   _divideBalancedNodes(root) {
-    const wingMode = localStorage.wingMode || "both";
-    if (wingMode === "both") {
+    const wingMode = localStorage.wingMode || 'both';
+    if (wingMode === 'both') {
       let divideIndex = this._getDivideIndex(root);
       let left = root.children.slice(0, divideIndex + 1);
       let right = root.children.slice(divideIndex + 1);
       return [left, right];
-    } else if (wingMode === "right") {
+    } else if (wingMode === 'right') {
       return [[], root.children];
     } else {
       return [root.children, []];
@@ -523,7 +523,7 @@ export default class MindMap {
 
   _drawBackgroundColor(canvasSize) {
     this.canvas_.drawRect({
-      fillStyle: "white",
+      fillStyle: 'white',
       x: 0,
       y: 0,
       width: canvasSize.width,

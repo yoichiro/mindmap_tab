@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import Token from "./token.js";
+import Token from './token.js';
 
 export default class Node {
 
@@ -9,7 +9,7 @@ export default class Node {
     this.children = [];
     this.parent = null;
     this.id = null;
-    this.source = source ? source.trim() : "";
+    this.source = source ? source.trim() : '';
     this._parseText(this.source);
     this.position = position;
   }
@@ -24,7 +24,7 @@ export default class Node {
           this._parseBold(x).forEach(y => {
             this.tokens.push(y);
           });
-        })
+        });
       }
     });
   }
@@ -93,11 +93,11 @@ export default class Node {
   }
 
   get text() {
-    return this.tokens.map(token => { return token.text; }).join("");
+    return this.tokens.map(token => { return token.text; }).join('');
   }
 
   get html() {
-    return this.tokens.map(token => { return token.toHtml(); }).join("");
+    return this.tokens.map(token => { return token.toHtml(); }).join('');
   }
 
   static root(text) {
