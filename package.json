@@ -23,7 +23,7 @@
     "commonjs": "^0.0.1",
     "fullcalendar": "^3.10.1",
     "jcanvas": "^21.0.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "moment": "^2.24.0",
     "responsive-toolkit": "^2.6.3"
   },
