@@ -69,9 +69,8 @@ class Newtab {
     editor.getSession().setUseWrapMode(false);
     editor.setShowPrintMargin(false);
     editor.setHighlightActiveLine(true);
-    editor.renderer.setShowGutter(false);
+    editor.renderer.setShowGutter(true);
     editor.$blockScrolling = Infinity;
-
     this.showStatusMessage("Initialized Ace Editor.");
 
     return editor;
