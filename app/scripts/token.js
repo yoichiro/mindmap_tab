@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export default class Token {
 
@@ -23,18 +23,18 @@ export default class Token {
 
   toHtml() {
     if (this.hasUrl()) {
-      return "<a href=\"" + this.url + "\">" + this.escapeHTML(this.text) + "</a>";
+      return '<a href=\'' + this.url + '\'>' + this.escapeHTML(this.text) + '</a>';
     } else if (this.isBold()) {
-      return "<span><b>" + this.escapeHTML(this.text) + "</b></span>";
+      return '<span><b>' + this.escapeHTML(this.text) + '</b></span>';
     } else if (this.isStrikeThrough()) {
-      return "<span><s>" + this.escapeHTML(this.text) + "</s></span>";
+      return '<span><s>' + this.escapeHTML(this.text) + '</s></span>';
     } else {
-      return "<span>" + this.escapeHTML(this.text) + "</span>";
+      return '<span>' + this.escapeHTML(this.text) + '</span>';
     }
   }
 
   escapeHTML(html) {
-    let e = document.createElement("div");
+    let e = document.createElement('div');
     e.appendChild(document.createTextNode(html));
     return e.innerHTML;
   }
